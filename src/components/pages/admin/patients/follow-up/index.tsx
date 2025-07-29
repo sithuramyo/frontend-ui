@@ -67,8 +67,8 @@ const FollowUp = () => {
             <Accordion type="multiple" className="px-6 space-y-4">
               {/* Risk Behaviour */}
               <AccordionItem value="item-1">
-                <AccordionTrigger className="text-lg font-semibold flex items-center gap-2">
-                  <ShieldQuestion className="w-5 h-5" aria-hidden /> Risk Behaviour
+                <AccordionTrigger className="text-lg font-semibold">
+                  Risk Behaviour
                 </AccordionTrigger>
                 <AccordionContent className="pt-4 pb-2">
                   <TooltipProvider>

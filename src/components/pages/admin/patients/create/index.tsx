@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Select,
   SelectContent,
@@ -128,7 +126,8 @@ export default function CreatePatient() {
   };
 
   const handleClick = () => {
-    navigate(`/home/patients/follow-up`);
+    const href = '/home/patients/follow-up';
+    navigate(href);
   }
 
   return (
@@ -394,7 +393,7 @@ export default function CreatePatient() {
               {/* ✅ Submit Button at the end */}
               <div className="lg:col-span-3 md:col-span-2 flex justify-center lg:justify-end gap-4 pt-4 border-t mt-8 bg-blue-50 rounded-xl shadow-sm px-6 py-6">
                 <Button
-                  onClick={() => handleClick}
+                  onClick={handleClick}
                   className="flex items-center gap-2 px-8 py-3 rounded-lg bg-gradient-to-r from-[#051463] via-blue-700 to-blue-400 text-white font-bold text-lg shadow-lg transition-all duration-200 hover:-translate-y-1 hover:shadow-xl hover:from-blue-800 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-[#051463]"
                 >
                   <UserPlus className="w-5 h-5 text-white" />
