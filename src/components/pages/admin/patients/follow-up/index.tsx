@@ -6,7 +6,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
-import { Calendar, UserCheck, AlertTriangle, ShieldQuestion, Syringe, Shield, HelpCircle, CheckCircle2, XCircle } from "lucide-react";
+import { Calendar, UserCheck, AlertTriangle, Syringe, Shield, HelpCircle, CheckCircle2, XCircle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const hivStatusOptions = ["Positive", "Negative", "Unknown"];
