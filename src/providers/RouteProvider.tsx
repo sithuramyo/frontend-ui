@@ -38,7 +38,7 @@ export const router = createBrowserRouter([
       { path: 'registration', element: <CreatePatientPage /> },
       { path: 'daily-operation', element: <DailyOperationPage/>},
       { path: 'dispense', element: <Dispensing /> },
-      { path: 'patients/follow-up', element: <FollowUpPage /> }
+      { path: 'follow-up', element: <FollowUpPage /> }
     ],
   },
   {

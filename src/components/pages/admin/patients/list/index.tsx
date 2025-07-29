@@ -351,7 +351,7 @@ const Patients = () => {
         {
           label: "Actions",
           render: () => {
-            const href = '/home/patients/follow-up';
+            const href = '/home/follow-up';
             return (
               <div className="flex items-center gap-2">
                 <EditButton href={href} />
@@ -445,7 +445,7 @@ const Patients = () => {
         {
           label: "Actions",
           render: () => {
-            const href = '/home/patients/follow-up';
+            const href = '/home/follow-up';
             return (
               <div className="flex items-center gap-2">
                 <EditButton href={href} />

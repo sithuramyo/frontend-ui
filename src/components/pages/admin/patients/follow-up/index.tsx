@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
 import { Calendar, UserCheck, AlertTriangle, Syringe, Shield, HelpCircle, CheckCircle2, XCircle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 
 const hivStatusOptions = ["Positive", "Negative", "Unknown"];
 const hepCStatusOptions = ["Positive", "Negative", "Unknown"];
@@ -30,6 +31,20 @@ const sideEffects = [
 const FollowUp = () => {
   const [outcomeDate, setOutcomeDate] = useState("2023-09-14");
 
+  // Accordion expand/collapse all logic
+  const accordionKeys = [
+    "item-1", // Risk Behaviour
+    "item-2", // Current Medical History
+    "item-3", // Vital Sign
+    "item-4", // Lab Investigation
+    "item-5", // Treatment
+    "item-6", // Outcome
+    "item-7", // BPN Side Effect
+  ];
+  const [openAccordions, setOpenAccordions] = useState<string[]>([]);
+  const handleExpandAll = () => setOpenAccordions(accordionKeys);
+  const handleCollapseAll = () => setOpenAccordions([]);
+
   return (
     <div className="flex flex-col min-h-screen bg-muted/50">
       <div className="w-full max-w-7xl mx-auto px-4 pt-8 pb-6">
@@ -39,7 +54,22 @@ const FollowUp = () => {
         <p className="text-muted-foreground text-base mb-8 max-w-2xl">
           Record and manage follow-up information for clients. Complete all relevant sections accurately.
         </p>
-
+        <div className="flex gap-2 mb-4 justify-end">
+          <Button
+            type="button"
+            className="px-4 py-2 rounded-md font-semibold"
+            onClick={handleExpandAll}
+          >
+            Expand All
+          </Button>
+          <Button
+            type="button"
+            className="px-4 py-2 rounded-md font-semibold"
+            onClick={handleCollapseAll}
+          >
+            Collapse All
+          </Button>
+        </div>
         <Card className="shadow-2xl rounded-2xl border-0 bg-white/95">
           <CardContent className="pt-0">
             <div className="rounded-t-2xl bg-gradient-to-r from-[#051463] via-blue-700 to-blue-400 px-8 py-6 flex items-center gap-3 mb-8 shadow-md">
@@ -64,7 +94,12 @@ const FollowUp = () => {
               </div>
             </div>
             {/* Accordion */}
-            <Accordion type="multiple" className="px-6 space-y-4">
+            <Accordion
+              type="multiple"
+              className="px-6 space-y-4"
+              value={openAccordions}
+              onValueChange={setOpenAccordions}
+            >
               {/* Risk Behaviour */}
               <AccordionItem value="item-1">
                 <AccordionTrigger className="text-lg font-semibold">
