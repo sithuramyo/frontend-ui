@@ -86,6 +86,12 @@ declare global {
     interface PatientNoProps{
         patientNo: string;
     }
+
+    interface FollowUpProps{
+        VisitDate?: Date;
+        PatientNo?: string;
+        isFollow?: boolean;
+    }
 }
 
 export { }
