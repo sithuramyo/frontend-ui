@@ -10,9 +10,9 @@ import { Calendar, UserCheck, AlertTriangle, Syringe, Shield, HelpCircle, CheckC
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 
-const hivStatusOptions = ["Positive", "Negative", "Unknown"];
-const hepCStatusOptions = ["Positive", "Negative", "Unknown"];
-const hepBStatusOptions = ["Positive", "Negative", "Unknown"];
+// const hivStatusOptions = ["Positive", "Negative", "Unknown"];
+// const hepCStatusOptions = ["Positive", "Negative", "Unknown"];
+// const hepBStatusOptions = ["Positive", "Negative", "Unknown"];
 const testOptions = ["-- Select --", "Reactive", "Non-Reactive", "Invalid"];
 const urineTests = ["Morphine", "Amphetamine", "Cannabis", "Diazepam", "Methadone"];
 const outcomeOptions = [
@@ -28,7 +28,7 @@ const sideEffects = [
   "Confusion", "Oral Ulceration", "Light headedness", "Constipation",
   "Blurred Vision", "Weakness", "Hallucination", "Sexual Problem"
 ];
-const FollowUp = () => {
+const FollowUp = ( prop: FollowUpProps) => {
   const [outcomeDate, setOutcomeDate] = useState("2023-09-14");
 
   // Accordion expand/collapse all logic
@@ -213,10 +213,10 @@ const FollowUp = () => {
                 </AccordionContent>
               </AccordionItem>
               {/* Current Medical History */}
-              <AccordionItem value="item-2">
+              {/* <AccordionItem value="item-2">
                 <AccordionTrigger className="text-lg font-semibold">Current Medical History</AccordionTrigger>
                 <AccordionContent className="pt-4 pb-2 space-y-6">
-                  {/* HIV Section */}
+                  
                   <div className="border rounded-lg p-4 space-y-4 bg-gray-50">
                     <Label className="text-lg font-semibold">HIV Status</Label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -265,7 +265,7 @@ const FollowUp = () => {
                       <Input placeholder="ART Clinic" className="bg-white" />
                     </div>
                   </div>
-                  {/* Hep C Section */}
+                  
                   <div className="border rounded-lg p-4 space-y-4 bg-gray-50">
                     <Label className="text-lg font-semibold">Hepatitis C Status</Label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -299,7 +299,7 @@ const FollowUp = () => {
                       <Input type="date" placeholder="Hep C Complete Date" className="bg-white" />
                     </div>
                   </div>
-                  {/* Hep B Section */}
+                 
                   <div className="border rounded-lg p-4 space-y-4 bg-gray-50">
                     <Label className="text-lg font-semibold">Hepatitis B Status</Label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -318,7 +318,7 @@ const FollowUp = () => {
                       </div>
                     </div>
                   </div>
-                  {/* TB and Mental Health Section */}
+                  
                   <div className="border rounded-lg p-4 space-y-4 bg-gray-50">
                     <Label className="text-lg font-semibold">TB and Mental Health</Label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -365,7 +365,7 @@ const FollowUp = () => {
                     </div>
                   </div>
                 </AccordionContent>
-              </AccordionItem>
+              </AccordionItem> */}
               {/* Vital Sign */}
               <AccordionItem value="item-3">
                 <AccordionTrigger className="text-lg font-semibold">Vital Sign</AccordionTrigger>
@@ -670,7 +670,7 @@ const FollowUp = () => {
                 </AccordionContent>
               </AccordionItem>
               {/* BPN Side Effect */}
-              <AccordionItem value="item-7">
+              <AccordionItem value="item-7" className="hidden">
                 <AccordionTrigger className="text-lg font-semibold">BPN Side Effect</AccordionTrigger>
                 <AccordionContent className="pt-4 pb-2">
                   <div className="space-y-2">

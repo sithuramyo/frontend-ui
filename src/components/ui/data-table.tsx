@@ -12,6 +12,7 @@ export interface Column<T> {
 type DataTableProps<T> = {
   data: T[];
   columns: Column<T>[];
+  onRowClick?: (row: T) => void;
 };
 
 function renderNullable(value: string | null | undefined) {
@@ -25,7 +26,7 @@ function renderNullable(value: string | null | undefined) {
   return value;
 }
 
-export default function DataTable<T>({ data, columns }: DataTableProps<T>) {
+export default function DataTable<T>({ data, columns, onRowClick }: DataTableProps<T>) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [search, setSearch] = useState("");
@@ -127,7 +128,11 @@ export default function DataTable<T>({ data, columns }: DataTableProps<T>) {
           <tbody>
             {rows.length > 0 ? (
               rows.map((row, rowIndex) => (
-                <tr key={(row as any).id ?? rowIndex} className="hover:bg-gray-100 transition">
+                <tr
+                  key={(row as any).id ?? rowIndex}
+                  className={`hover:bg-gray-100 transition ${onRowClick ? "cursor-pointer" : ""}`}
+                  onClick={() => onRowClick?.(row)}
+                >
                   {columns.map((col, colIndex) => (
                     <td key={colIndex} className="px-4 py-3">
                       {col.render
@@ -145,6 +150,7 @@ export default function DataTable<T>({ data, columns }: DataTableProps<T>) {
               </tr>
             )}
           </tbody>
+
         </table>
       </div>
 

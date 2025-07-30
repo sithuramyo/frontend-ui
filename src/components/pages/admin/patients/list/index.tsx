@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { format, isValid } from "date-fns";
 import { useSidebarState } from "@/providers/SidebarProvider";
 import EditButton from "@/components/ui/edit-button";
+import { useNavigate } from "react-router-dom";
 
 const staticPatients = [
   {
@@ -345,6 +346,12 @@ interface Patient {
 const Patients = () => {
   const { isCollapsed } = useSidebarState();
 
+  const navigate = useNavigate();
+
+  const handleRowClick = (row: Patient) => {
+    navigate(`/home/follow-up?id=${row.id}`);
+  };
+
   const columns: Column<Patient>[] =
     isCollapsed ?
       [
@@ -459,11 +466,13 @@ const Patients = () => {
             <div className="flex items-center gap-2 text-sm font-semibold text-primary">
               {row.patientId}
               <Button
+                
                 variant="ghost"
                 size="icon"
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation(); // 👈 prevent row navigation
                   navigator.clipboard.writeText(row.patientId);
-                  toast.success("Copied to clipboard!");
+                  toast.success("Copied!");
                 }}
               >
                 <Copy className="w-4 h-4 text-muted-foreground" />
@@ -515,6 +524,7 @@ const Patients = () => {
     <DataTable<Patient>
       data={staticPatients}
       columns={columns}
+      onRowClick={handleRowClick}
     />
   );
 };

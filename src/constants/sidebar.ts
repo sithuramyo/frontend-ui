@@ -15,13 +15,13 @@ export const sidebarItems: SidebarMenuItem[] = [
         children: [
             {
                 id: 1,
-                label: "Follow Up",
-                path: "/home/patient"
+                label: "Client Registration",
+                path: "/home/registration"
             },
             {
                 id: 2,
-                label: "Client Registration",
-                path: "/home/registration"
+                label: "Follow Up",
+                path: "/home/patient"
             },
             {
                 id: 3,
