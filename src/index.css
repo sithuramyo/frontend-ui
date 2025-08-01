@@ -111,13 +111,43 @@
 }
 
 @layer base {
+  :root {
+    /* Primary */
+    --color-primary: #051463;
+    --color-background: #ffffff;
+
+    /* Accent Colors */
+    --color-sky-light: #3C9EE7;
+    --color-teal-medical: #00A9A5;
+    --color-lavender-soft: #B8B8FF;
+    --color-coral-warm: #F9AFAE;
+
+    /* Utility / Status */
+    --color-success: #28A745;
+    --color-warning: #FFC107;
+    --color-error: #E63946;
+    --color-info: #2196F3;
+
+    /* Text */
+    --color-text-primary: #051463;
+    --color-text-secondary: #5C5C5C;
+    --color-text-disabled: #9E9E9E;
+
+    /* UI / Background */
+    --color-ui-card: #F5F5F5;
+    --color-ui-divider: #E0E0E0;
+    --color-ui-hover: #E3ECFA;
+  }
+  
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
   }
+
 }
+
 
 .hide-scrollbar {
   scrollbar-width: none; /* Firefox */

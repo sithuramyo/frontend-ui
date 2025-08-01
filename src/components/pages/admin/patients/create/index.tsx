@@ -136,13 +136,16 @@ export default function CreatePatient() {
   const [hepcCompleteDate, setHepcCompleteDate] = useState<Date | undefined>(undefined);
 
   const [hepBStatus, setHepBStatus] = useState("");
-  const [hepbTreatmentReceived, setHepbTreatmentReceived] = useState("no");
+  const [hepbTreatmentReceived, setHepbTreatmentReceived] = useState("");
   const [hepbStartDate, setHepbStartDate] = useState<Date | undefined>(undefined);
 
   const [tbTreatmentReceived, setTbTreatmentReceived] = useState("no");
   const [tbScreening, setTbScreening] = useState("no");
   const [tbRegimen, setTbRegimen] = useState("");
-  const [mentalHealthScreening, setMentalHealthScreening] = useState("no");
+  const [mentalHealthScreening, setMentalHealthScreening] = useState("yes");
+
+  const [tbScreeningChecked, setTbScreeningChecked] = useState(false);
+  const [mentalHealthScreeningChecked, setMentalHealthScreeningChecked] = useState(false);
 
 
   // --- Helper functions for DOB and Age ---
@@ -215,60 +218,7 @@ export default function CreatePatient() {
   };
 
   const handleClick = () => {
-    console.log({
-      entryType,
-      clientId,
-      oldClientId,
-      clientName,
-      registrationDate: registrationDate?.toISOString().split('T')[0],
-      transferDate: transferDate?.toISOString().split('T')[0],
-      transferCenter,
-      gender,
-      race,
-      occupation,
-      education,
-      maritalStatus,
-      stateRegion,
-      township,
-      phoneNumber,
-      fatherName,
-      addressNo,
-      street,
-      wards,
-      dob: dob?.toISOString().split('T')[0],
-      age,
-      heightFeet,
-      heightInches,
-      convertedHeight,
-      nrcPrefix,
-      nrcTownship,
-      nrcType,
-      nrcNumber,
-      nrcFinal,
-      firstDrugAge,
-      sharedNeedle,
-      overdosed,
-      selectedDrugs,
-      hivStatus,
-      artReceived,
-      artStartDate: artStartDate?.toISOString().split('T')[0],
-      artRegimen,
-      artCode,
-      artClinicHere,
-      artClinic,
-      hepCStatus,
-      hepcTreatmentReceived,
-      hepcStartDate: hepcStartDate?.toISOString().split('T')[0],
-      hepcCompleteDate: hepcCompleteDate?.toISOString().split('T')[0],
-      hepBStatus,
-      hepbTreatmentReceived,
-      hepbStartDate: hepbStartDate?.toISOString().split('T')[0],
-      tbTreatmentReceived,
-      tbScreening,
-      tbRegimen,
-      mentalHealthScreening,
-    });
-    navigate('/home/follow-up');
+    navigate('/home/regfollowup');
   };
 
   return (
@@ -592,7 +542,7 @@ export default function CreatePatient() {
                 <CardContent className="pt-0 pb-6">
                   {/* --- HIV Section --- */}
                   <div className="border rounded-lg p-4 space-y-4 bg-gray-50 mb-6">
-                    <Label className="text-lg font-semibold">HIV Status</Label>
+                    <Label className="text-lg font-semibold">HIV Status <span className="text-red-500 text-lg">*</span></Label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="flex flex-col gap-2">
                         <Label htmlFor="hiv-status-select">HIV Status</Label>
@@ -635,11 +585,11 @@ export default function CreatePatient() {
                       {hivStatus === "Positive" && artReceived === "yes" && (
                         <>
                           <div className="flex flex-col gap-2">
-                            <Label htmlFor="art-start-date">ART Start Date</Label>
+                            <Label htmlFor="art-start-date">ART Started Date</Label>
                             <DatePicker
                               date={artStartDate}
                               setDate={setArtStartDate}
-                              placeholder="Select ART Start Date"
+                              placeholder="Select ART Started Date"
                             />
                           </div>
                           {/* Updated to use InputGroup with all props */}
@@ -663,7 +613,15 @@ export default function CreatePatient() {
                             </RadioGroup>
                           </div>
                           {/* Updated to use InputGroup with all props */}
-                          <InputGroup id="art-clinic" label="ART Clinic" placeholder="ART Clinic" value={artClinic} onChange={(e) => setArtClinic(e.target.value)} />
+
+                          {
+                            artClinicHere === "no" && (
+                              <div className="flex flex-col gap-2">
+                                <Label htmlFor="art-clinic-name">ART Clinic Name</Label>
+                                <Input id="art-clinic-name" placeholder="ART Clinic Name" value={artClinic} onChange={(e) => setArtClinic(e.target.value)} />
+                              </div>
+                            )
+                          }
                         </>
                       )}
                       {/* This div handles the full width for other statuses */}
@@ -673,7 +631,7 @@ export default function CreatePatient() {
 
                   {/* --- Hep C Section --- */}
                   <div className="border rounded-lg p-4 space-y-4 bg-gray-50 mb-6">
-                    <Label className="text-lg font-semibold">Hepatitis C Status</Label>
+                    <Label className="text-lg font-semibold">Hepatitis C Status <span className="text-red-500 text-lg">*</span></Label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="flex flex-col gap-2">
                         <Label htmlFor="hepc-status-select">Hep C Status</Label>
@@ -716,19 +674,19 @@ export default function CreatePatient() {
                       {hepCStatus === "Positive" && hepcTreatmentReceived === "yes" && (
                         <>
                           <div className="flex flex-col gap-2">
-                            <Label htmlFor="hepc-start-date">Hep C Start Date</Label>
+                            <Label htmlFor="hepc-start-date">Hep C Treatment Started Date</Label>
                             <DatePicker
                               date={hepcStartDate}
                               setDate={setHepcStartDate}
-                              placeholder="Select Hep C Start Date"
+                              placeholder="Select Hep C Started Date"
                             />
                           </div>
                           <div className="flex flex-col gap-2">
-                            <Label htmlFor="hepc-complete-date">Hep C Complete Date</Label>
+                            <Label htmlFor="hepc-complete-date">Hep C Treatment Completed Date</Label>
                             <DatePicker
                               date={hepcCompleteDate}
                               setDate={setHepcCompleteDate}
-                              placeholder="Select Hep C Complete Date"
+                              placeholder="Select Hep C Completed Date"
                             />
                           </div>
                         </>
@@ -740,7 +698,7 @@ export default function CreatePatient() {
 
                   {/* --- Hep B Section --- */}
                   <div className="border rounded-lg p-4 space-y-4 bg-gray-50 mb-6">
-                    <Label className="text-lg font-semibold">Hepatitis B Status</Label>
+                    <Label className="text-lg font-semibold">Hepatitis B Status <span className="text-red-500 text-lg">*</span></Label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="flex flex-col gap-2">
                         <Label htmlFor="hepb-status-select">Hep B Status</Label>
@@ -759,9 +717,9 @@ export default function CreatePatient() {
                       </div>
 
                       {/* Conditionally rendered Hep B treatment Receive or not field */}
-                      {hepBStatus === "Positive" && (
+                      {hepBStatus === "Negative" && (
                         <div className="flex flex-col gap-2">
-                          <Label>Hep B treatment Receive or not?</Label>
+                          <Label>Hep B Vaccinated or not?</Label>
                           <RadioGroup
                             value={hepbTreatmentReceived}
                             onValueChange={setHepbTreatmentReceived}
@@ -780,7 +738,7 @@ export default function CreatePatient() {
                       )}
 
                       {/* Conditionally rendered Hep B date picker when treatment is received */}
-                      {hepBStatus === "Positive" && hepbTreatmentReceived === "yes" && (
+                      {/* {hepBStatus === "Negative" && hepbTreatmentReceived === "yes" && (
                         <div className="flex flex-col gap-2">
                           <Label htmlFor="hepb-start-date">Hep B Start Date</Label>
                           <DatePicker
@@ -789,61 +747,91 @@ export default function CreatePatient() {
                             placeholder="Select Hep B Start Date"
                           />
                         </div>
-                      )}
+                      )} */}
                       {/* This div handles the full width for other statuses */}
                       {hepBStatus !== "Positive" && <div className="md:col-span-2" />}
                     </div>
                   </div>
 
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* TB & Mental Health */}
+            <div className="md:col-span-2 lg:col-span-3">
+              <Card className="mt-4 shadow-lg rounded-2xl border-0 bg-white/95">
+                <div className="flex items-center gap-3 px-8 py-4 rounded-t-2xl bg-[#051463] mb-4 shadow">
+                  <User className="w-6 h-6 text-white drop-shadow" />
+                  <h2 className="text-3xl font-extrabold text-white tracking-tight">
+                    TB & Mental Health
+                  </h2>
+                </div>
+                <CardContent className="pt-0 pb-6">
                   {/* TB and Mental Health Section - updated to pass all InputGroup props where used */}
-                  <div className="border rounded-lg p-4 space-y-4 bg-gray-50">
-                    <Label className="text-lg font-semibold">
-                      TB and Mental Health
-                    </Label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="flex flex-col gap-2">
-                        <Label>Current TB treatment received or not?</Label>
-                        <RadioGroup value={tbTreatmentReceived} onValueChange={setTbTreatmentReceived} className="flex flex-row gap-4">
-                          <div className="flex items-center gap-2">
-                            <RadioGroupItem value="yes" id="tb-yes" />
-                            <Label htmlFor="tb-yes">Yes</Label>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <RadioGroupItem value="no" id="tb-no" />
-                            <Label htmlFor="tb-no">No</Label>
-                          </div>
-                        </RadioGroup>
+                  <div className="flex flex-col gap-8">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="flex flex-col gap-2">
+                          <Label>Current TB treatment received or not?</Label>
+                          <RadioGroup value={tbTreatmentReceived} onValueChange={setTbTreatmentReceived} className="flex flex-row gap-4">
+                            <div className="flex items-center gap-2">
+                              <RadioGroupItem value="yes" id="tb-yes" />
+                              <Label htmlFor="tb-yes">Yes</Label>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <RadioGroupItem value="no" id="tb-no" />
+                              <Label htmlFor="tb-no">No</Label>
+                            </div>
+                          </RadioGroup>
+                        </div>
+                        {
+                          tbTreatmentReceived === "no" && (
+                            <div className="flex items-center gap-5">
+                              <div className="flex items-center gap-2">
+                                <Label htmlFor="tb-screening-checkbox">TB Screening</Label>
+                                <div className="flex items-center space-x-2"> {/* Added a div for alignment */}
+                                  <Checkbox
+                                    id="tb-screening-checkbox"
+                                    checked={mentalHealthScreeningChecked}
+                                    onCheckedChange={(checked) => setMentalHealthScreeningChecked(Boolean(checked))}
+                                  />
+                                </div>
+                              </div>
+                                <div className="flex items-center gap-2">
+                                  <Label htmlFor="tb-screening-checkbox">Refer For TB Treatment</Label>
+                                  <Checkbox id="tb-screening-checkbox" />
+                                </div>
+                            </div>
+                          )
+                        }
+                        {/* Updated to use InputGroup with all props */}
+                        {
+                          tbTreatmentReceived === "yes" && (
+                            <>
+                              <InputGroup id="tb-regimen" label="TB Regimen" placeholder="TB Regimen" value={tbRegimen} onChange={(e) => setTbRegimen(e.target.value)} />
+                            </>
+                          )
+                        }
+
                       </div>
-                      <div className="flex flex-col gap-2">
-                        <Label>TB Screening</Label>
-                        <RadioGroup value={tbScreening} onValueChange={setTbScreening} className="flex flex-row gap-4">
-                          <div className="flex items-center gap-2">
-                            <RadioGroupItem value="yes" id="tb-screening-yes" />
-                            <Label htmlFor="tb-screening-yes">Yes</Label>
+                      <div className="flex items-center gap-[340px]">
+                        <div className="flex gap-2">
+                          <Label>Mental Health Screening</Label>
+                          <div className="flex items-center space-x-2"> {/* Added a div for alignment */}
+                            <Checkbox
+                              id="tb-screening-checkbox"
+                              checked={tbScreeningChecked}
+                              onCheckedChange={(checked) => setTbScreeningChecked(Boolean(checked))}
+                            />
                           </div>
+                        </div>
+                        <div>
                           <div className="flex items-center gap-2">
-                            <RadioGroupItem value="no" id="tb-screening-no" />
-                            <Label htmlFor="tb-screening-no">No</Label>
+                            <Label htmlFor="tb-screening-checkbox">Refer For Mental Health Treatment</Label>
+                            <Checkbox id="tb-screening-checkbox" />
                           </div>
-                        </RadioGroup>
-                      </div>
-                      {/* Updated to use InputGroup with all props */}
-                      <InputGroup id="tb-regimen" label="TB Regimen" placeholder="TB Regimen" value={tbRegimen} onChange={(e) => setTbRegimen(e.target.value)} />
-                      <div className="flex flex-col gap-2">
-                        <Label>Mental Health Screening</Label>
-                        <RadioGroup value={mentalHealthScreening} onValueChange={setMentalHealthScreening} className="flex flex-row gap-4">
-                          <div className="flex items-center gap-2">
-                            <RadioGroupItem value="yes" id="mh-yes" />
-                            <Label htmlFor="mh-yes">Yes</Label>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <RadioGroupItem value="no" id="mh-no" />
-                            <Label htmlFor="mh-no">No</Label>
-                          </div>
-                        </RadioGroup>
+                        </div>
                       </div>
                     </div>
-                  </div>
                 </CardContent>
               </Card>
             </div>

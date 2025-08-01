@@ -111,14 +111,14 @@ const sideEffects = [
   "Confusion", "Oral Ulceration", "Light headedness", "Constipation",
   "Blurred Vision", "Weakness", "Hallucination", "Sexual Problem"
 ];
-const FollowUp = (prop: FollowUpProps) => {
+const Reg_followup = (prop: FollowUpProps) => {
   const drugTypes = ["Opioid", "Stimulant", "Depressant", "Hallucinogen", "Other"];
   const routesOfAdmin = ["Oral", "Inhalation", "Injection", "Smoking", "Other"];
   const frequencies = ["Daily", "Weekly", "Monthly", "Occasionally", "Stopped"];
   const lastUse = ["Less than 1 month", "1-3 months", "3-6 months", "More than 6 months", "Never"];
 
   const [recordDate, setRecordDate] = useState("");
-  const [currentDrugUse, setCurrentDrugUse] = useState("no");
+  const [currentDrugUse, setCurrentDrugUse] = useState("yes");
   const [typeOfDrugUseMajor, setTypeOfDrugUseMajor] = useState("");
   const [mostRecentRoutesOfAdmin, setMostRecentRoutesOfAdmin] = useState("");
   const [durationYears, setDurationYears] = useState("");
@@ -126,7 +126,6 @@ const FollowUp = (prop: FollowUpProps) => {
   const [frequencyOfDrugUse, setFrequencyOfDrugUse] = useState("");
   const [whenLastUse, setWhenLastUse] = useState("");
   const [outcomeDate, setOutcomeDate] = useState("2025-09-14");
-  const [selectedOutcome, setSelectedOutcome] = useState(""); 
 
   // Accordion expand/collapse all logic
   const accordionKeys = [
@@ -171,12 +170,12 @@ const FollowUp = (prop: FollowUpProps) => {
         <Card className="shadow-2xl rounded-2xl border-0 bg-white/95">
           <CardContent className="pt-0">
             <div className="rounded-t-2xl bg-gradient-to-r from-[#051463] via-blue-700 to-blue-400 px-8 py-6 flex items-center gap-3 mb-8 shadow-md">
-              <UserCheck className="w-8 h-8 text-white drop-shadow" />
-              <h2 className="text-3xl font-extrabold text-white tracking-tight">Follow-Up Form</h2>
+              <UserCheck className="w-8 h-8 text-white drop-shadow hidden" />
+              <h2 className="text-3xl font-extrabold text-white tracking-tight hidden">Follow-Up Form</h2>
             </div>
             {/* Visit Date Section */}
             <div className="flex flex-col md:flex-row w-full justify-between gap-8 px-6 pb-8">
-              <div className="flex flex-col gap-2 w-full md:w-1/2">
+              <div className="flex flex-col gap-2 w-full md:w-1/2 hidden">
                 <Label className="font-semibold text-base text-primary flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-[#051463]" />
                   Visit Date <span className="text-red-500">*</span>
@@ -206,7 +205,6 @@ const FollowUp = (prop: FollowUpProps) => {
                 <AccordionContent className="pt-4 pb-2">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                    {/* This radio group is always visible */}
                     <div className="flex flex-col gap-2">
                       <Label>Current Drug Use Within 6 Month <span className="text-red-500">*</span></Label>
                       <RadioGroup value={currentDrugUse} onValueChange={setCurrentDrugUse} className="flex flex-row gap-4">
@@ -221,69 +219,64 @@ const FollowUp = (prop: FollowUpProps) => {
                       </RadioGroup>
                     </div>
 
-                    {/* Conditionally render the rest of the fields */}
-                    {currentDrugUse === "yes" && (
-                      <>
-                        <div className="flex flex-col gap-2">
-                          <Label>Type Of Current Drug Use (Major) <span className="text-red-500">*</span></Label>
-                          <Select value={typeOfDrugUseMajor} onValueChange={setTypeOfDrugUseMajor}>
-                            <SelectTrigger className="bg-white"><SelectValue placeholder="-- Type of Drug Use (Major) --" /></SelectTrigger>
-                            <SelectContent>
-                              {drugTypes.map((drug) => (
-                                <SelectItem key={drug} value={drug}>{drug}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
+                    <div className="flex flex-col gap-2">
+                      <Label>Type Of Current Drug Use (Major) <span className="text-red-500">*</span></Label>
+                      <Select value={typeOfDrugUseMajor} onValueChange={setTypeOfDrugUseMajor}>
+                        <SelectTrigger className="bg-white"><SelectValue placeholder="-- Type of Drug Use (Major) --" /></SelectTrigger>
+                        <SelectContent>
+                          {drugTypes.map((drug) => (
+                            <SelectItem key={drug} value={drug}>{drug}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
 
-                        <div className="flex flex-col gap-2">
-                          <Label>Most Recent Routes Of Admin <span className="text-red-500">*</span></Label>
-                          <Select value={mostRecentRoutesOfAdmin} onValueChange={setMostRecentRoutesOfAdmin}>
-                            <SelectTrigger className="bg-white"><SelectValue placeholder="-- Most Recent Routes Of Admin --" /></SelectTrigger>
-                            <SelectContent>
-                              {routesOfAdmin.map((route) => (
-                                <SelectItem key={route} value={route}>{route}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
+                    <div className="flex flex-col gap-2">
+                      <Label>Most Recent Routes Of Admin <span className="text-red-500">*</span></Label>
+                      <Select value={mostRecentRoutesOfAdmin} onValueChange={setMostRecentRoutesOfAdmin}>
+                        <SelectTrigger className="bg-white"><SelectValue placeholder="-- Most Recent Routes Of Admin --" /></SelectTrigger>
+                        <SelectContent>
+                          {routesOfAdmin.map((route) => (
+                            <SelectItem key={route} value={route}>{route}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
 
-                        <div className="flex items-end gap-2">
-                          <div className="flex flex-col gap-2">
-                            <Label htmlFor="duration-years">Duration of Use (Years)</Label>
-                            <Input id="duration-years" placeholder="Years" type="number" value={durationYears} onChange={(e) => setDurationYears(e.target.value)} className="bg-white" />
-                          </div>
-                          <div className="flex flex-col gap-2">
-                            <Label htmlFor="duration-months">(Months)</Label>
-                            <Input id="duration-months" placeholder="Months" type="number" value={durationMonths} onChange={(e) => setDurationMonths(e.target.value)} className="bg-white" />
-                          </div>
-                        </div>
+                    <div className="flex items-end gap-2">
+                      <div className="flex flex-col gap-2">
+                        <Label htmlFor="duration-years">Duration of Use (Years)</Label>
+                        <Input id="duration-years" placeholder="Years" type="number" value={durationYears} onChange={(e) => setDurationYears(e.target.value)} className="bg-white" />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <Label htmlFor="duration-months">(Months)</Label>
+                        <Input id="duration-months" placeholder="Months" type="number" value={durationMonths} onChange={(e) => setDurationMonths(e.target.value)} className="bg-white" />
+                      </div>
+                    </div>
 
-                        <div className="flex flex-col gap-2">
-                          <Label>Frequency of Drug Use</Label>
-                          <Select value={frequencyOfDrugUse} onValueChange={setFrequencyOfDrugUse}>
-                            <SelectTrigger className="bg-white"><SelectValue placeholder="-- Frequency of Drug Use --" /></SelectTrigger>
-                            <SelectContent>
-                              {frequencies.map((f) => (
-                                <SelectItem key={f} value={f}>{f}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
+                    <div className="flex flex-col gap-2">
+                      <Label>Frequency of Drug Use</Label>
+                      <Select value={frequencyOfDrugUse} onValueChange={setFrequencyOfDrugUse}>
+                        <SelectTrigger className="bg-white"><SelectValue placeholder="-- Frequency of Drug Use --" /></SelectTrigger>
+                        <SelectContent>
+                          {frequencies.map((f) => (
+                            <SelectItem key={f} value={f}>{f}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
 
-                        <div className="flex flex-col gap-2">
-                          <Label>When was your last use of drugs</Label>
-                          <Select value={whenLastUse} onValueChange={setWhenLastUse}>
-                            <SelectTrigger className="bg-white"><SelectValue placeholder="-- When was your last use of drugs --" /></SelectTrigger>
-                            <SelectContent>
-                              {lastUse.map((l) => (
-                                <SelectItem key={l} value={l}>{l}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </>
-                    )}
+                    <div className="flex flex-col gap-2">
+                      <Label>When was your last use of drugs</Label>
+                      <Select value={whenLastUse} onValueChange={setWhenLastUse}>
+                        <SelectTrigger className="bg-white"><SelectValue placeholder="-- When was your last use of drugs --" /></SelectTrigger>
+                        <SelectContent>
+                          {lastUse.map((l) => (
+                            <SelectItem key={l} value={l}>{l}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -804,95 +797,56 @@ const FollowUp = (prop: FollowUpProps) => {
                 </AccordionContent>
               </AccordionItem>
               {/* Outcome */}
-              <AccordionItem value="item-6">
-                <AccordionTrigger className="text-lg font-semibold">
-                  Outcome
-                </AccordionTrigger>
-                <AccordionContent className="pt-4 pb-2">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <AccordionItem value="item-6" className="hidden">
+                <AccordionTrigger className="text-lg font-semibold">Outcome</AccordionTrigger>
+                <AccordionContent className="pt-4 pb-2 space-y-4">
 
-                    {/* Main Outcome Selection */}
+                  <div className="flex flex-col gap-6">
                     <div className="flex flex-col gap-2">
-                      <Label>Outcome <span className="text-red-500">*</span></Label>
-                      <Select value={selectedOutcome} onValueChange={setSelectedOutcome}>
-                        <SelectTrigger className="bg-white">
-                          <SelectValue placeholder="-- Select Outcome --" />
+                      <Label>
+                        Outcome <span className="text-red-500">*</span>
+                      </Label>
+                      <Select>
+                        <SelectTrigger>
+                          <SelectValue placeholder="-- Select Outcome Type --" />
                         </SelectTrigger>
                         <SelectContent>
-                          {outcomeOptions.map((outcome) => (
-                            <SelectItem key={outcome} value={outcome}>
-                              {outcome}
+                          {outcomeOptions.map((opt) => (
+                            <SelectItem key={opt} value={opt}>
+                              {opt}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                     </div>
-
-                    {/* Outcome Date */}
                     <div className="flex flex-col gap-2">
-                      <Label htmlFor="outcome-date">Date of Outcome</Label>
-                      <Input id="outcome-date" type="date" value={outcomeDate} onChange={(e) => setOutcomeDate(e.target.value)} className="bg-white" />
+                      <Label>Outcome Date</Label>
+                      <Input
+                        type="date"
+                        value={outcomeDate}
+                        onChange={(e) => setOutcomeDate(e.target.value)}
+                        className="bg-white"
+                      />
+
                     </div>
-
-                    {/* Dynamic Select box based on selectedOutcome */}
-                    {selectedOutcome === "Transferred Out" && (
-                      <div className="flex flex-col gap-2 md:col-span-2"> {/* span 2 columns to make it full width on md screens */}
-                        <Label>Transferout Center</Label>
-                        <Select>
-                          <SelectTrigger className="bg-white">
-                            <SelectValue placeholder="-- Select Transferout Center --" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {transferoutCenterOptions.map((option) => (
-                              <SelectItem key={option.id} value={option.name}>
-                                {option.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    )}
-
-                    {selectedOutcome === "Exipred" && (
-                      <div className="flex flex-col gap-2 md:col-span-2">
-                        <Label>Cause of Death</Label>
-                        <Select>
-                          <SelectTrigger className="bg-white">
-                            <SelectValue placeholder="-- Select Cause of death --" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {expiredOptions.map((option) => (
-                              <SelectItem key={option.id} value={option.name}>
-                                {option.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    )}
-
-                    {selectedOutcome === "Treatment interruption" && (
-                      <div className="flex flex-col gap-2 md:col-span-2">
-                        <Label>Reason of Interruption</Label>
-                        <Select>
-                          <SelectTrigger className="bg-white">
-                            <SelectValue placeholder="-- Select Reason of Interruption --" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {treatmentInterruptionOptions.map((option) => (
-                              <SelectItem key={option.id} value={option.name}>
-                                {option.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    )}
+                  </div>
+                  <div className="flex flex-col gap-2 mt-3">
+                    <Label>Additional Notes</Label>
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="-- Select Reason --" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Follow-up required">Follow-up required</SelectItem>
+                        <SelectItem value="Referred">Referred</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </AccordionContent>
               </AccordionItem>
               {/* BPN Side Effect */}
-              <AccordionItem value="item-7">
+              <AccordionItem value="item-7" className="hidden">
                 <AccordionTrigger className="text-lg font-semibold">BPN Side Effect</AccordionTrigger>
                 <AccordionContent className="pt-4 pb-2">
                   <div className="space-y-2">
@@ -931,4 +885,4 @@ const FollowUp = (prop: FollowUpProps) => {
   );
 };
 
-export default FollowUp;
+export default Reg_followup;

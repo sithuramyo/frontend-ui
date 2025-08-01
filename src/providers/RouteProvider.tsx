@@ -10,6 +10,7 @@ import Dispensing from "@/pages/Home/Dispense/Dispensing";
 import DailyOperationPage from "@/pages/Home/DailyOperation/DailyOperationPage";
 import FollowUpPage from "@/pages/Home/Patient/FollowUpPage";
 import AuthLayout from "@/layouts/AuthLayout";
+import Reg_followup from "@/components/pages/admin/patients/follow-up/reg_followup";
 
 export const router = createBrowserRouter([
   {
@@ -38,7 +39,8 @@ export const router = createBrowserRouter([
       { path: 'registration', element: <CreatePatientPage /> },
       { path: 'daily-operation', element: <DailyOperationPage/>},
       { path: 'dispense', element: <Dispensing /> },
-      { path: 'follow-up', element: <FollowUpPage /> }
+      { path: 'follow-up', element: <FollowUpPage /> },
+      { path: 'regfollowup', element: <Reg_followup/> }
     ],
   },
   {

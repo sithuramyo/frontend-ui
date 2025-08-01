@@ -7,12 +7,12 @@ import { Outlet } from 'react-router-dom';
 import { Toaster } from 'sonner';
 
 const HomeLayout: React.FC = () => {
-  const { isCollapsed } = useSidebarState();
+  const { isCollapsed, setIsCollapsed } = useSidebarState();
     return (
         <SidebarProvider>
             <Toaster />
             <AppSidebar />
-            <div className={`fixed top-0 ${isCollapsed ? "left-0" : "left-64"} right-0 z-40 h-16 bg-white border-b shadow-sm flex items-center`}>
+            <div  className={`fixed top-0 ${isCollapsed ? "left-0" : "left-64"} right-0 z-40 h-16 bg-white border-b shadow-sm flex items-center`}>
                 <Navbar />
             </div>
             <main

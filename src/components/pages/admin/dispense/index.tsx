@@ -1,15 +1,11 @@
 import { useState } from 'react';
 import { useApiMutation } from '@/hooks/api/useApiMutation';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Info } from 'lucide-react';
 
-interface DispenseRequest {
-  dosage: number;
-}
-
+// Removed DispenseRequest as dosage is no longer used
 interface DispenserStateRequest {
   isEnabled: boolean;
 }
@@ -19,28 +15,35 @@ interface DispenserCommandRequest {
 }
 
 const Dispense = () => {
-  const [dosage, setDosage] = useState('');
   const [isEnabled, setIsEnabled] = useState(false);
   const [currentDirection, setCurrentDirection] = useState<'Forward' | 'Reverse' | null>(null);
 
+  // Mutation for toggling dispenser power
   const toggleDispenserMutation = useApiMutation<DispenserStateRequest, any>({
     onSuccess: () => {
       setIsEnabled((prev) => !prev);
-      setCurrentDirection(null);
+      setCurrentDirection(null); // Reset direction when power changes
+      toast.success(isEnabled ? 'Dispenser turned OFF.' : 'Dispenser turned ON.');
     },
+    onError: (error) => {
+      toast.error(`Failed to toggle power: ${error.message || 'Unknown error'}`);
+    }
   });
 
-  const dispenseMutation = useApiMutation<DispenseRequest, any>();
-
+  // Mutation for sending Prime/Forward/Reverse commands
   const commandMutation = useApiMutation<DispenserCommandRequest, any>({
     onSuccess: (_, variables) => {
       const cmd = variables?.body?.request?.command;
-      if (cmd === 'Forward' || cmd === 'Reverse') {
-        setCurrentDirection(cmd);
-      } else {
-        setCurrentDirection(null);
-      }
+      toast.success(`${cmd} command sent successfully!`);
+      // For Prime, we don't necessarily want to change the selected direction state,
+      // as the user might want to prime multiple times in the same direction.
+      // If 'Prime' implicitly sets direction, you'd adjust this.
     },
+    onError: (error) => {
+      toast.error(`Command failed: ${error.message || 'Unknown error'}`);
+      // Consider resetting currentDirection on error if the command invalidates the state
+      // setCurrentDirection(null);
+    }
   });
 
   const handleToggle = () => {
@@ -51,27 +54,11 @@ const Dispense = () => {
     });
   };
 
-  const handleDispense = () => {
-    const dosageValue = parseFloat(dosage);
-    if (isNaN(dosageValue) || dosageValue <= 0) {
-      toast.error('Please enter a valid dosage');
+  const handlePrime = () => {
+    if (!currentDirection) {
+      toast.error('Please select a motor direction (Forward or Reverse) first.');
       return;
     }
-
-    dispenseMutation.mutate({
-      endpoint: '/dispenser/dispense',
-      method: 'POST',
-      body: { request: { dosage: dosageValue } },
-    });
-  };
-
-
-  const handleDirectionSelect = (direction: 'Forward' | 'Reverse') => {
-    setCurrentDirection(direction);
-  };
-
-  const handlePrime = () => {
-    if (!currentDirection) return;
     commandMutation.mutate({
       endpoint: '/dispenser/command',
       method: 'POST',
@@ -79,9 +66,11 @@ const Dispense = () => {
     });
   };
 
-  const directionColor = (dir: 'Forward' | 'Reverse') => {
-    if (currentDirection === dir) return dir === 'Forward' ? '🟢' : '🟡';
-    return '⚪';
+  // Helper for consistent button styling for direction selection
+  const getDirectionButtonClass = (dir: 'Forward' | 'Reverse') => {
+    return currentDirection === dir
+      ? dir === 'Forward' ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-orange-600 hover:bg-orange-700 text-white'
+      : 'bg-gray-200 hover:bg-gray-300 text-gray-800';
   };
 
   return (
@@ -93,14 +82,14 @@ const Dispense = () => {
             <span><Info className="w-5 h-5 text-blue-500" /></span>
           </TooltipTrigger>
           <TooltipContent>
-            Manage the dispenser's power, dosage, and direction.
+            Manage the dispenser's power and motor direction.
           </TooltipContent>
         </Tooltip>
       </h2>
 
       {/* Power Toggle */}
-      <div className="flex justify-between items-center">
-        <span className="text-sm font-medium flex items-center gap-1">
+      <div className="flex justify-between items-center py-2">
+        <span className="text-base font-medium flex items-center gap-1">
           Dispenser Power
           <Tooltip>
             <TooltipTrigger asChild>
@@ -119,125 +108,104 @@ const Dispense = () => {
           {toggleDispenserMutation.isPending
             ? <span className="flex items-center gap-1"><span className="loader"></span>Processing...</span>
             : isEnabled
-            ? 'Turn Off'
-            : 'Turn On'}
+              ? 'Turn Off'
+              : 'Turn On'}
         </Button>
       </div>
 
-      {/* Dosage Input */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-700 flex items-center gap-1">
-          Dosage (mL)
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span><Info className="w-4 h-4 text-gray-400" /></span>
-            </TooltipTrigger>
-            <TooltipContent>
-              Set the amount to dispense in milliliters.
-            </TooltipContent>
-          </Tooltip>
-        </label>
-        <Input
-          type="number"
-          value={dosage}
-          onChange={(e) => setDosage(e.target.value)}
-          placeholder="Enter dosage (ml)"
-          step="0.1"
-          min="0"
-          disabled={!isEnabled}
-        />
-        <Button
-          className="w-full bg-blue-600 hover:bg-blue-700"
-          onClick={handleDispense}
-          disabled={!isEnabled || dispenseMutation.isPending}
-        >
-          {dispenseMutation.isPending ? <span className="flex items-center gap-1"><span className="loader"></span>Dispensing...</span> : 'Dispense'}
-        </Button>
-        <div className="text-xs text-gray-500">Enter a positive value and press Dispense.</div>
-      </div>
+      <hr className="my-4" />
 
-      {/* Direction Control */}
-      <div className="flex items-center justify-between pt-4">
-        <span className="text-sm font-medium text-gray-700 flex items-center gap-1">
-          Direction
+      {/* Motor Direction Control (Toggle Group Style) */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <span className="text-base font-medium text-gray-700 flex items-center gap-1">
+            Motor Direction
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span><Info className="w-4 h-4 text-gray-400" /></span>
+              </TooltipTrigger>
+              <TooltipContent>
+                Select the direction for motor operations (e.g., Prime).
+              </TooltipContent>
+            </Tooltip>
+          </span>
+          <div className="flex gap-2">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div> {/* div wrapper to allow tooltip on disabled button */}
+                  <Button
+                    className={`${getDirectionButtonClass('Forward')} ${!isEnabled ? 'cursor-not-allowed' : ''}`}
+                    onClick={() => setCurrentDirection('Forward')}
+                    disabled={!isEnabled || commandMutation.isPending}
+                  >
+                    <span className="flex items-center gap-1">
+                      <span role="img" aria-label="blue circle">🔵</span> Forward
+                    </span>
+                  </Button>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                {!isEnabled ? 'Turn on the dispenser first.' : 'Select Forward direction.'}
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div> {/* div wrapper to allow tooltip on disabled button */}
+                  <Button
+                    className={`${getDirectionButtonClass('Reverse')} ${!isEnabled ? 'cursor-not-allowed' : ''}`}
+                    onClick={() => setCurrentDirection('Reverse')}
+                    disabled={!isEnabled || commandMutation.isPending}
+                  >
+                    <span className="flex items-center gap-1">
+                      <span role="img" aria-label="orange circle">🟠</span> Reverse
+                    </span>
+                  </Button>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                {!isEnabled ? 'Turn on the dispenser first.' : 'Select Reverse direction.'}
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        </div>
+
+        {/* Prime Button - now explicitly tied to selected direction */}
+        <div className="flex justify-center pt-2">
           <Tooltip>
             <TooltipTrigger asChild>
-              <span><Info className="w-4 h-4 text-gray-400" /></span>
-            </TooltipTrigger>
-            <TooltipContent>
-              Set the dispenser's direction.
-            </TooltipContent>
-          </Tooltip>
-        </span>
-        <div className="flex gap-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div>
+              <div className="w-full">
                 <Button
-                  className={`${
-                    currentDirection === 'Forward'
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-200 text-black'
-                  } hover:bg-green-700`}
-                  onClick={() => handleDirectionSelect('Forward')}
-                  disabled={!isEnabled || commandMutation.isPending}
+                  className={`w-full bg-purple-600 hover:bg-purple-700 ${(!isEnabled || !currentDirection || commandMutation.isPending) ? 'opacity-60 cursor-not-allowed' : ''}`}
+                  onClick={handlePrime}
+                  disabled={!isEnabled || !currentDirection || commandMutation.isPending}
                 >
-                  <span className="flex items-center gap-1">🟢 Forward</span>
+                  {commandMutation.isPending
+                    ? <span className="flex items-center gap-1"><span className="loader"></span>Priming...</span>
+                    : `Prime ${currentDirection ? currentDirection : ''}`}
                 </Button>
               </div>
             </TooltipTrigger>
             <TooltipContent>
-              {!isEnabled ? 'Turn on the dispenser first.' : 'Move Forward.'}
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div>
-                <Button
-                  className={`${
-                    currentDirection === 'Reverse'
-                      ? 'bg-yellow-500 text-white'
-                      : 'bg-gray-200 text-black'
-                  } hover:bg-yellow-600`}
-                  onClick={() => handleDirectionSelect('Reverse')}
-                  disabled={!isEnabled || commandMutation.isPending}
-                >
-                  <span className="flex items-center gap-1">🟡 Reverse</span>
-                </Button>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              {!isEnabled ? 'Turn on the dispenser first.' : 'Move Reverse.'}
+              {(!isEnabled ? 'Turn on the dispenser first.' : !currentDirection ? 'Select a direction (Forward/Reverse) first.' : `Initiate priming in ${currentDirection} direction.`)}
             </TooltipContent>
           </Tooltip>
         </div>
       </div>
 
-      {/* Prime Button (moved after direction) */}
-      <div className="flex justify-between gap-4 pt-4">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div className="w-full">
-              <Button
-                className={`w-full bg-purple-600 hover:bg-purple-700 ${(!isEnabled || !currentDirection) ? 'opacity-60 cursor-not-allowed' : ''}`}
-                onClick={handlePrime}
-                disabled={!isEnabled || !currentDirection || commandMutation.isPending}
-              >
-                Prime
-              </Button>
-            </div>
-          </TooltipTrigger>
-          <TooltipContent>
-            {(!isEnabled ? 'Turn on the dispenser first.' : !currentDirection ? 'Select a direction (Forward/Reverse) first.' : 'Prime the dispenser in the selected direction.')}
-          </TooltipContent>
-        </Tooltip>
+      <hr className="my-4" />
+
+      {/* Status Indicators */}
+      <div className="flex justify-between items-center text-sm font-medium text-gray-700">
+        <span>Dispenser Status:</span>
+        <span className="inline-flex items-center gap-1">
+          {isEnabled ? '🟢 ON' : '🔴 OFF'}
+        </span>
       </div>
 
-      {/* LED Indicator */}
-      <div className="pt-2 text-sm font-medium text-gray-700 flex items-center gap-2">
-        Current Direction:
+      <div className="flex justify-between items-center text-sm font-medium text-gray-700">
+        <span>Selected Motor Direction:</span>
         <span className="inline-flex items-center gap-1">
-          {currentDirection === null ? '⚪ Idle' : `${directionColor(currentDirection)} ${currentDirection}`}
+          {currentDirection === null ? '⚪ None Selected' : `${currentDirection === 'Forward' ? '🔵' : '🟠'} ${currentDirection}`}
         </span>
       </div>
     </div>
