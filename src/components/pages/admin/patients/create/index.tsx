@@ -256,7 +256,7 @@ export default function CreatePatient() {
         <Card className="shadow-xl rounded-2xl border-0 bg-white/90">
           <CardContent className="pt-0">
             {/* Card Header with blue gradient and icon */}
-            <div className="rounded-t-2xl bg-gradient-to-r from-[#051463] via-blue-700 to-blue-400 px-8 py-6 flex items-center gap-3 mb-6 shadow-md">
+            <div className="rounded-t-2xl bg-[#051463] px-8 py-6 flex items-center gap-3 mb-6 shadow-md">
               <UserPlus className="w-8 h-8 text-white drop-shadow" />
               <h2 className="text-3xl font-extrabold text-white tracking-tight">Client Information</h2>
             </div>
@@ -448,7 +448,13 @@ export default function CreatePatient() {
                   maxLength={6}
                   placeholder="Number"
                 />
-                <Input readOnly value={nrcFinal} className="w-full max-w-[180px] bg-white" placeholder="NRC Final" />
+                <div className="flex flex-col gap-1">
+                  <span className="font-mono text-base bg-gray-100 px-2 py-1 rounded-md">
+                    {nrcFinal || "NRC Final"}
+                  </span>
+                </div>
+
+
               </div>
             </div>
 
@@ -456,7 +462,7 @@ export default function CreatePatient() {
             <div className="md:col-span-2 lg:col-span-3">
               <Card className="mt-4 shadow-lg rounded-2xl border-0 bg-white/95">
                 {/* Client History Header with blue accent and icon */}
-                <div className="flex items-center gap-3 px-8 py-4 rounded-t-2xl bg-gradient-to-r from-[#051463] via-blue-700 to-blue-400 mb-4 shadow">
+                <div className="flex items-center gap-3 px-8 py-4 rounded-t-2xl bg-[#051463] to-blue-400 mb-4 shadow">
                   <User className="w-6 h-6 text-white drop-shadow" />
                   <h2 className="text-3xl font-extrabold text-white tracking-tight">Client History</h2>
                 </div>
@@ -533,7 +539,7 @@ export default function CreatePatient() {
             {/* Current Medical History Section - updated to pass all InputGroup props where used */}
             <div className="md:col-span-2 lg:col-span-3">
               <Card className="mt-4 shadow-lg rounded-2xl border-0 bg-white/95">
-                <div className="flex items-center gap-3 px-8 py-4 rounded-t-2xl bg-gradient-to-r from-[#051463] via-blue-700 to-blue-400 mb-4 shadow">
+                <div className="flex items-center gap-3 px-8 py-4 rounded-t-2xl bg-[#051463] to-blue-400 mb-4 shadow">
                   <User className="w-6 h-6 text-white drop-shadow" />
                   <h2 className="text-3xl font-extrabold text-white tracking-tight">
                     Current Medical History
@@ -769,69 +775,69 @@ export default function CreatePatient() {
                 <CardContent className="pt-0 pb-6">
                   {/* TB and Mental Health Section - updated to pass all InputGroup props where used */}
                   <div className="flex flex-col gap-8">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="flex flex-col gap-2">
-                          <Label>Current TB treatment received or not?</Label>
-                          <RadioGroup value={tbTreatmentReceived} onValueChange={setTbTreatmentReceived} className="flex flex-row gap-4">
-                            <div className="flex items-center gap-2">
-                              <RadioGroupItem value="yes" id="tb-yes" />
-                              <Label htmlFor="tb-yes">Yes</Label>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <RadioGroupItem value="no" id="tb-no" />
-                              <Label htmlFor="tb-no">No</Label>
-                            </div>
-                          </RadioGroup>
-                        </div>
-                        {
-                          tbTreatmentReceived === "no" && (
-                            <div className="flex items-center gap-5">
-                              <div className="flex items-center gap-2">
-                                <Label htmlFor="tb-screening-checkbox">TB Screening</Label>
-                                <div className="flex items-center space-x-2"> {/* Added a div for alignment */}
-                                  <Checkbox
-                                    id="tb-screening-checkbox"
-                                    checked={mentalHealthScreeningChecked}
-                                    onCheckedChange={(checked) => setMentalHealthScreeningChecked(Boolean(checked))}
-                                  />
-                                </div>
-                              </div>
-                                <div className="flex items-center gap-2">
-                                  <Label htmlFor="tb-screening-checkbox">Refer For TB Treatment</Label>
-                                  <Checkbox id="tb-screening-checkbox" />
-                                </div>
-                            </div>
-                          )
-                        }
-                        {/* Updated to use InputGroup with all props */}
-                        {
-                          tbTreatmentReceived === "yes" && (
-                            <>
-                              <InputGroup id="tb-regimen" label="TB Regimen" placeholder="TB Regimen" value={tbRegimen} onChange={(e) => setTbRegimen(e.target.value)} />
-                            </>
-                          )
-                        }
-
-                      </div>
-                      <div className="flex items-center gap-[340px]">
-                        <div className="flex gap-2">
-                          <Label>Mental Health Screening</Label>
-                          <div className="flex items-center space-x-2"> {/* Added a div for alignment */}
-                            <Checkbox
-                              id="tb-screening-checkbox"
-                              checked={tbScreeningChecked}
-                              onCheckedChange={(checked) => setTbScreeningChecked(Boolean(checked))}
-                            />
-                          </div>
-                        </div>
-                        <div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="flex flex-col gap-2">
+                        <Label>Current TB treatment received or not?</Label>
+                        <RadioGroup value={tbTreatmentReceived} onValueChange={setTbTreatmentReceived} className="flex flex-row gap-4">
                           <div className="flex items-center gap-2">
-                            <Label htmlFor="tb-screening-checkbox">Refer For Mental Health Treatment</Label>
-                            <Checkbox id="tb-screening-checkbox" />
+                            <RadioGroupItem value="yes" id="tb-yes" />
+                            <Label htmlFor="tb-yes">Yes</Label>
                           </div>
+                          <div className="flex items-center gap-2">
+                            <RadioGroupItem value="no" id="tb-no" />
+                            <Label htmlFor="tb-no">No</Label>
+                          </div>
+                        </RadioGroup>
+                      </div>
+                      {
+                        tbTreatmentReceived === "no" && (
+                          <div className="flex items-center gap-5">
+                            <div className="flex items-center gap-2">
+                              <Label htmlFor="tb-screening-checkbox">TB Screening</Label>
+                              <div className="flex items-center space-x-2"> {/* Added a div for alignment */}
+                                <Checkbox
+                                  id="tb-screening-checkbox"
+                                  checked={mentalHealthScreeningChecked}
+                                  onCheckedChange={(checked) => setMentalHealthScreeningChecked(Boolean(checked))}
+                                />
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Label htmlFor="tb-screening-checkbox">Refer For TB Treatment</Label>
+                              <Checkbox id="tb-screening-checkbox" />
+                            </div>
+                          </div>
+                        )
+                      }
+                      {/* Updated to use InputGroup with all props */}
+                      {
+                        tbTreatmentReceived === "yes" && (
+                          <>
+                            <InputGroup id="tb-regimen" label="TB Regimen" placeholder="TB Regimen" value={tbRegimen} onChange={(e) => setTbRegimen(e.target.value)} />
+                          </>
+                        )
+                      }
+
+                    </div>
+                    <div className="flex items-center gap-[340px]">
+                      <div className="flex gap-2">
+                        <Label>Mental Health Screening</Label>
+                        <div className="flex items-center space-x-2"> {/* Added a div for alignment */}
+                          <Checkbox
+                            id="tb-screening-checkbox"
+                            checked={tbScreeningChecked}
+                            onCheckedChange={(checked) => setTbScreeningChecked(Boolean(checked))}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <Label htmlFor="tb-screening-checkbox">Refer For Mental Health Treatment</Label>
+                          <Checkbox id="tb-screening-checkbox" />
                         </div>
                       </div>
                     </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>
