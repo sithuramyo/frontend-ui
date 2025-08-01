@@ -1,14 +1,18 @@
-"use client";
-
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 
-import { cn } from "@/lib/utils"; // Your utility for tailwind-merge
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-export function DatePicker({ date, setDate, placeholder = "Pick a date" }) {
+interface DatePickerProps {
+  date: Date | undefined; // <-- Change to Date | undefined
+  setDate: (date: Date | undefined) => void; // <-- Change to Date | undefined
+  placeholder?: string;
+}
+
+export function DatePicker({ date, setDate, placeholder = "Pick a date" }: DatePickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -27,7 +31,7 @@ export function DatePicker({ date, setDate, placeholder = "Pick a date" }) {
         <Calendar
           mode="single"
           selected={date}
-          onSelect={setDate}
+          onSelect={setDate} // This now works without an inline function
           initialFocus
         />
       </PopoverContent>

@@ -84,7 +84,7 @@ export default function CreatePatient() {
 
   // --- Client Information States ---
   const [entryType, setEntryType] = useState<"new" | "transfer">("new");
-  const [clientId, setClientId] = useState("001/000001"); // Example initial value
+  // const [clientId, setClientId] = useState("001/000001"); 
   const [oldClientId, setOldClientId] = useState("");
   const [clientName, setClientName] = useState("");
   const [registrationDate, setRegistrationDate] = useState<Date | undefined>(undefined); // Use Date type for DatePicker
@@ -137,12 +137,12 @@ export default function CreatePatient() {
 
   const [hepBStatus, setHepBStatus] = useState("");
   const [hepbTreatmentReceived, setHepbTreatmentReceived] = useState("");
-  const [hepbStartDate, setHepbStartDate] = useState<Date | undefined>(undefined);
+  // const [hepbStartDate, setHepbStartDate] = useState<Date | undefined>(undefined);
 
   const [tbTreatmentReceived, setTbTreatmentReceived] = useState("no");
-  const [tbScreening, setTbScreening] = useState("no");
+  // const [tbScreening, setTbScreening] = useState("no");
   const [tbRegimen, setTbRegimen] = useState("");
-  const [mentalHealthScreening, setMentalHealthScreening] = useState("yes");
+  // const [mentalHealthScreening, setMentalHealthScreening] = useState("yes");
 
   const [tbScreeningChecked, setTbScreeningChecked] = useState(false);
   const [mentalHealthScreeningChecked, setMentalHealthScreeningChecked] = useState(false);
@@ -263,7 +263,7 @@ export default function CreatePatient() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-8">
               {/* General Info */}
               {/* Added readOnly: true and empty placeholder for static inputs */}
-              <InputGroup label={<span className="flex items-center gap-2"><IdCard className="w-4 h-4 text-[#051463]" />Client Id</span>} id="client-id" value={clientId} readOnly={true} placeholder="" />
+              <InputGroup label={<span className="flex items-center gap-2"><IdCard className="w-4 h-4 text-[#051463]" />Client Id</span>} id="client-id" value={`001/000001`} readOnly={true} placeholder="" />
               <InputGroup label={<span className="flex items-center gap-2"><IdCard className="w-4 h-4 text-[#051463]" />Old Client Id</span>} id="old-client-id" value={oldClientId} onChange={(e) => setOldClientId(e.target.value)} placeholder="Enter old client ID" />
               <InputGroup label={<span className="flex items-center gap-2"><User className="w-4 h-4 text-[#051463]" />Client Name</span>} id="client-name" value={clientName} onChange={(e) => setClientName(e.target.value)} placeholder="Enter client name" />
 
@@ -343,7 +343,7 @@ export default function CreatePatient() {
               ].map(([label, options, value, setter]) => (
                 <div key={label as string} className="flex flex-col gap-2">
                   <Label htmlFor={`${(label as string).toLowerCase().replace(/\s+/g, '-')}-select`} className="font-semibold text-base text-primary mb-1 flex items-center gap-2">
-                    <User className="w-4 h-4 text-[#051463]" />{label}
+                    <User className="w-4 h-4 text-[#051463]" />{label as string}
                   </Label>
                   <Select value={value as string} onValueChange={setter as (value: string) => void}>
                     <SelectTrigger id={`${(label as string).toLowerCase().replace(/\s+/g, '-')}-select`} className="w-full bg-white">

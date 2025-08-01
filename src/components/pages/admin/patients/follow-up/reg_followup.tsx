@@ -32,7 +32,7 @@ const expiredOptions = ["-- Select Cause of death --", "Fatal Overdose", "Accide
 
 const treatmentInterruptionOptions = ["-- Select Reason of Interruption --", "Loss of follow-up", "Incarcreation", "Psychosis", "Hyper Sensitivity"]; */
 
-const transferoutCenterOptions = [
+/* const transferoutCenterOptions = [
   {
     id: 0,
     "name": "-- Select Transferout Center --"
@@ -103,7 +103,7 @@ const treatmentInterruptionOptions = [
     id: 4,
     "name": "Hyper Sensitivity"
   }
-]
+] */
 
 const sideEffects = [
   "Sedation", "Drowsiness", "Diplopia", "Incoordination",
@@ -111,13 +111,13 @@ const sideEffects = [
   "Confusion", "Oral Ulceration", "Light headedness", "Constipation",
   "Blurred Vision", "Weakness", "Hallucination", "Sexual Problem"
 ];
-const Reg_followup = (prop: FollowUpProps) => {
+const Reg_followup = () => {
   const drugTypes = ["Opioid", "Stimulant", "Depressant", "Hallucinogen", "Other"];
   const routesOfAdmin = ["Oral", "Inhalation", "Injection", "Smoking", "Other"];
   const frequencies = ["Daily", "Weekly", "Monthly", "Occasionally", "Stopped"];
   const lastUse = ["Less than 1 month", "1-3 months", "3-6 months", "More than 6 months", "Never"];
 
-  const [recordDate, setRecordDate] = useState("");
+  // const [recordDate, setRecordDate] = useState("");
   const [currentDrugUse, setCurrentDrugUse] = useState("yes");
   const [typeOfDrugUseMajor, setTypeOfDrugUseMajor] = useState("");
   const [mostRecentRoutesOfAdmin, setMostRecentRoutesOfAdmin] = useState("");
@@ -175,7 +175,7 @@ const Reg_followup = (prop: FollowUpProps) => {
             </div>
             {/* Visit Date Section */}
             <div className="flex flex-col md:flex-row w-full justify-between gap-8 px-6 pb-8">
-              <div className="flex flex-col gap-2 w-full md:w-1/2 hidden">
+              <div className=" flex-col gap-2 w-full md:w-1/2 hidden">
                 <Label className="font-semibold text-base text-primary flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-[#051463]" />
                   Visit Date <span className="text-red-500">*</span>

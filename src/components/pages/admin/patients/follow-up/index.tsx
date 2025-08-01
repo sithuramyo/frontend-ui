@@ -111,13 +111,13 @@ const sideEffects = [
   "Confusion", "Oral Ulceration", "Light headedness", "Constipation",
   "Blurred Vision", "Weakness", "Hallucination", "Sexual Problem"
 ];
-const FollowUp = (prop: FollowUpProps) => {
+const FollowUp = () => {
   const drugTypes = ["Opioid", "Stimulant", "Depressant", "Hallucinogen", "Other"];
   const routesOfAdmin = ["Oral", "Inhalation", "Injection", "Smoking", "Other"];
   const frequencies = ["Daily", "Weekly", "Monthly", "Occasionally", "Stopped"];
   const lastUse = ["Less than 1 month", "1-3 months", "3-6 months", "More than 6 months", "Never"];
 
-  const [recordDate, setRecordDate] = useState("");
+  // const [recordDate, setRecordDate] = useState("");
   const [currentDrugUse, setCurrentDrugUse] = useState("no");
   const [typeOfDrugUseMajor, setTypeOfDrugUseMajor] = useState("");
   const [mostRecentRoutesOfAdmin, setMostRecentRoutesOfAdmin] = useState("");

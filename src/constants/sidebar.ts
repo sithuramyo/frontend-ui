@@ -6,7 +6,6 @@ import {
   FileText,
   UploadCloud,
   Database,
-  Droplet,
   SoapDispenserDroplet,
   Cog,
 } from "lucide-react";

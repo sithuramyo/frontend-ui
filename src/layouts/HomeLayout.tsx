@@ -7,7 +7,7 @@ import { Outlet } from 'react-router-dom';
 import { Toaster } from 'sonner';
 
 const HomeLayout: React.FC = () => {
-  const { isCollapsed, setIsCollapsed } = useSidebarState();
+  const { isCollapsed } = useSidebarState();
     return (
         <SidebarProvider>
             <Toaster />
