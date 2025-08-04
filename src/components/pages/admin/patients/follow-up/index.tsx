@@ -14,6 +14,7 @@ import { IconlessDatePicker } from "@/components/ui/iconless-date-picker";
 
 const testOptions = ["-- Select --", "Reactive", "Non-Reactive", "Invalid"];
 const urineTests = ["Morphine", "Amphetamine", "Cannabis", "Diazepam", "Methadone"];
+
 const outcomeOptions = [
   "Completed Treatment",
   "Transferred Out",
@@ -56,6 +57,7 @@ const sideEffects = [
   "Blurred Vision", "Weakness", "Hallucination", "Sexual Problem",
 ];
 
+
 const FollowUp = () => {
   const drugTypes = ["Opioid", "Stimulant", "Depressant", "Hallucinogen", "Other"];
   const routesOfAdmin = ["Oral", "Inhalation", "Injection", "Smoking", "Other"];
@@ -70,6 +72,14 @@ const FollowUp = () => {
   const [treatmentStartDate, setTreatmentStartDate] = useState<Date | undefined>(undefined);
   const [outcomeDate, setOutcomeDate] = useState<Date | undefined>(undefined);
   const [urineTestDates, setUrineTestDates] = useState<{ [key: string]: Date | undefined }>({});
+
+  const [tbTreatmentReceived, setTbTreatmentReceived] = useState("no");
+  // const [tbScreening, setTbScreening] = useState("no");
+  const [tbRegimen, setTbRegimen] = useState("");
+  // const [mentalHealthScreening, setMentalHealthScreening] = useState("yes");
+
+  const [tbScreeningChecked, setTbScreeningChecked] = useState(false);
+  const [mentalHealthScreeningChecked, setMentalHealthScreeningChecked] = useState(false);
 
   const handleUrineTestDateChange = (drug: string, date: Date | undefined) => {
     setUrineTestDates(prev => ({ ...prev, [drug]: date }));
@@ -159,7 +169,8 @@ const FollowUp = () => {
               {/* Drug History */}
               <AccordionItem value="item-1" className="bg-[#f9f7f7] p-4">
                 <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                  Drug Use History
+                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">Drug Use History</span>
+                
                 </AccordionTrigger>
                 <AccordionContent className="pt-4 pb-2">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -240,7 +251,7 @@ const FollowUp = () => {
               {/* Risk Behaviour */}
               <AccordionItem value="item-2" className="bg-[#f9f7f7] p-4">
                 <AccordionTrigger className="text-lg font-semibold">
-                  Risk Behaviour
+                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">Risk Behaviour</span>
                 </AccordionTrigger>
                 <AccordionContent className="pt-4 pb-2">
                   <TooltipProvider>
@@ -351,7 +362,9 @@ const FollowUp = () => {
               </AccordionItem>
               {/* Vital Sign */}
               <AccordionItem value="item-3" className="bg-[#f9f7f7] p-4">
-                <AccordionTrigger className="text-lg font-semibold">Vital Sign</AccordionTrigger>
+                <AccordionTrigger className="text-lg font-semibold">
+                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">Vital Sign</span>
+                </AccordionTrigger>
                 <AccordionContent className="pt-4 pb-2 space-y-4">
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="weight">Body Weight (lb) <span className="text-red-500">*</span></Label>
@@ -393,7 +406,9 @@ const FollowUp = () => {
               </AccordionItem>
               {/* Lab Investigation */}
               <AccordionItem value="item-4" className="bg-[#f9f7f7] p-4">
-                <AccordionTrigger className="text-lg font-semibold">Lab Investigation</AccordionTrigger>
+                <AccordionTrigger className="text-lg font-semibold">
+                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">Lab Investigation</span>
+                </AccordionTrigger>
                 <AccordionContent className="pt-4 pb-2 space-y-6">
                   {/* HIV Testing */}
                   <div className="space-y-2">
@@ -494,7 +509,7 @@ const FollowUp = () => {
                       <div className="grid grid-cols-1 gap-2">
                         {urineTests.map((drug) => (
                           <div key={drug} className="grid grid-cols-5 gap-2 items-center bg-gray-50 rounded-lg p-2 mb-1">
-                            <Checkbox id={`checkbox-${drug}`} />
+                            <Checkbox id={`checkbox-${drug}`} className="border-black" />
                             <Label htmlFor={`checkbox-${drug}`} className="col-span-1">{drug}</Label>
                             <DatePicker
                               date={urineTestDates[drug]}
@@ -520,7 +535,9 @@ const FollowUp = () => {
               </AccordionItem>
               {/* Treatment */}
               <AccordionItem value="item-5" className="bg-[#f9f7f7] p-4">
-                <AccordionTrigger className="text-lg font-semibold">Treatment</AccordionTrigger>
+                <AccordionTrigger className="text-lg font-semibold">
+                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">Treatment</span>
+                </AccordionTrigger>
                 <AccordionContent className="pt-4 pb-2 space-y-6">
                   <div className="space-y-2">
                     <Label className="font-semibold">Refer For:</Label>
@@ -617,7 +634,9 @@ const FollowUp = () => {
               </AccordionItem>
               {/* Outcome */}
               <AccordionItem value="item-6" className="bg-[#f9f7f7] p-4">
-                <AccordionTrigger className="text-lg font-semibold">Outcome</AccordionTrigger>
+                <AccordionTrigger className="text-lg font-semibold">
+                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">Outcome</span>
+                </AccordionTrigger>
                 <AccordionContent className="pt-4 pb-2 space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="flex flex-col gap-2">
@@ -698,7 +717,9 @@ const FollowUp = () => {
               </AccordionItem>
               {/* BPN Side Effect */}
               <AccordionItem value="item-7" className="bg-[#f9f7f7] p-4">
-                <AccordionTrigger className="text-lg font-semibold">BPN Side Effect</AccordionTrigger>
+                <AccordionTrigger className="text-lg font-semibold">
+                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">BPN Side Effect</span>
+                </AccordionTrigger>
                 <AccordionContent className="pt-4 pb-2 space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {sideEffects.map(effect => (
@@ -707,6 +728,83 @@ const FollowUp = () => {
                         <Label htmlFor={effect}>{effect}</Label>
                       </div>
                     ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+              {/* Tb & Mental Health */}
+              <AccordionItem value="item-tb-mental" className="bg-[#f9f7f7] p-4">
+                <AccordionTrigger className="text-lg font-semibold">
+                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">TB & Mental Health</span>
+                </AccordionTrigger>
+                <AccordionContent className="pt-4 pb-2 space-y-4">
+                  <div className="flex flex-col gap-8 p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="flex flex-col gap-2">
+                        <Label>Current TB treatment received or not?</Label>
+                        <RadioGroup value={tbTreatmentReceived} onValueChange={setTbTreatmentReceived} className="flex flex-row gap-4">
+                          <div className="flex items-center gap-2">
+                            <RadioGroupItem value="yes" id="tb-yes" />
+                            <Label htmlFor="tb-yes">Yes</Label>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <RadioGroupItem value="no" id="tb-no" />
+                            <Label htmlFor="tb-no">No</Label>
+                          </div>
+                        </RadioGroup>
+                      </div>
+                      {
+                        tbTreatmentReceived === "no" && (
+                          <div className="flex items-center gap-5">
+                            <div className="flex items-center gap-2">
+                              <Label htmlFor="tb-screening-checkbox">TB Screening</Label>
+                              <div className="flex items-center space-x-2">
+                                <Checkbox
+                                  id="tb-screening-checkbox"
+                                  checked={mentalHealthScreeningChecked}
+                                  onCheckedChange={(checked) => setMentalHealthScreeningChecked(Boolean(checked))}
+                                />
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Label htmlFor="tb-screening-checkbox">Refer For TB Treatment</Label>
+                              <Checkbox id="tb-screening-checkbox" />
+                            </div>
+                          </div>
+                        )
+                      }
+                      {
+                        tbTreatmentReceived === "yes" && (
+                          // The InputGroup has been replaced with this div containing a Label and Input
+                          <div className="flex flex-col gap-2">
+                            <Label htmlFor="tb-regimen">TB Regimen</Label>
+                            <Input
+                              id="tb-regimen"
+                              placeholder="TB Regimen"
+                              value={tbRegimen}
+                              onChange={(e) => setTbRegimen(e.target.value)}
+                            />
+                          </div>
+                        )
+                      }
+                    </div>
+                    <div className="flex items-center gap-[298px]">
+                      <div className="flex gap-2">
+                        <Label>Mental Health Screening</Label>
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="mental-screening-checkbox"
+                            checked={tbScreeningChecked}
+                            onCheckedChange={(checked) => setTbScreeningChecked(Boolean(checked))}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <Label htmlFor="mental-referral-checkbox">Refer For Mental Health Treatment</Label>
+                          <Checkbox id="mental-referral-checkbox" />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </AccordionContent>
               </AccordionItem>

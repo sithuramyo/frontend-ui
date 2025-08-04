@@ -11,7 +11,7 @@ const IconOnlyLayout = () => {
     <div>
       <Toaster />
       <IconOnlySidebar />
-      <main className="transition-all duration-300 px-6 pt-22 w-full hide-scrollbar overflow-auto ml-16">
+      <main className="transition-all duration-300 px-6  w-full hide-scrollbar overflow-auto ml-16">
         <Outlet />
       </main>
     </div>

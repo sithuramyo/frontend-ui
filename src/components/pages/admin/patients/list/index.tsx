@@ -349,7 +349,7 @@ const Patients = () => {
   const navigate = useNavigate();
 
   const handleRowClick = (row: Patient) => {
-    navigate(`/home/follow-up?id=${row.id}`);
+    navigate(`follow-up?id=${row.id}`);
   };
 
   const columns: Column<Patient>[] =

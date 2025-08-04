@@ -11,7 +11,8 @@ import DailyOperationPage from "@/pages/Home/DailyOperation/DailyOperationPage";
 import FollowUpPage from "@/pages/Home/Patient/FollowUpPage";
 import AuthLayout from "@/layouts/AuthLayout";
 import Reg_followup from "@/components/pages/admin/patients/follow-up/reg_followup";
-import IconOnlyLayout from "@/components/IconOnlySidebar/IconOnlyLayout";
+import IconLayout from "@/layouts/IconLayout";
+import FollowUp from "@/components/pages/admin/patients/follow-up";
 
 export const router = createBrowserRouter([
   {
@@ -22,7 +23,7 @@ export const router = createBrowserRouter([
     path: '/',
     element: <AuthLayout />,
     children: [
-      { path: 'login', element: <Auth />}
+      { path: 'login', element: <Auth /> }
       // { path: 'login', element: <Auth />, loader: loader },
     ],
   },
@@ -38,16 +39,16 @@ export const router = createBrowserRouter([
       { path: 'dashboard', element: <Dashboard /> },
       { path: 'patient', element: <PatientPage /> },
       { path: 'registration', element: <CreatePatientPage /> },
-      { path: 'daily-operation', element: <DailyOperationPage/>},
+      { path: 'daily-operation', element: <DailyOperationPage /> },
       { path: 'dispense', element: <Dispensing /> },
-      { path: 'follow-up', element: <FollowUpPage /> },
-      { path: 'regfollowup', element: <Reg_followup/> }
+      { path: 'patient/follow-up', element: <FollowUpPage /> },
+      { path: 'registration/regfollowup', element: <Reg_followup /> }
     ],
   },
   {
     path: '/iconOnlyHome',
     element: (
-      <IconOnlyLayout />
+      <IconLayout />
       // <ProtectedRoute>
       // <HomeLayout />
       // </ProtectedRoute>
@@ -58,8 +59,8 @@ export const router = createBrowserRouter([
       { path: 'registration', element: <CreatePatientPage /> },
       { path: 'daily-operation', element: <DailyOperationPage /> },
       { path: 'dispense', element: <Dispensing /> },
-      { path: 'follow-up', element: <FollowUpPage /> },
-      { path: 'regfollowup', element: <Reg_followup /> }
+      { path: 'patient/follow-up', element: <FollowUp /> },
+      { path: 'registration/regfollowup', element: <Reg_followup /> }
     ],
   },
   {

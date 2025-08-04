@@ -124,7 +124,9 @@ const Reg_followup = () => {
               {/* Drug History */}
               <AccordionItem value="item-1" className="bg-[#f9f7f7] p-4">
                 <AccordionTrigger className="text-lg font-semibold text-primary">
-                  Drug Use History
+                  <div className="flex items-center gap-4">
+                    <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">Drug Use History</span>
+                  </div>
                 </AccordionTrigger>
                 <AccordionContent className="pt-4 pb-2">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -207,7 +209,10 @@ const Reg_followup = () => {
               {/* Risk Behaviour */}
               <AccordionItem value="item-2" className="bg-[#f9f7f7] p-4">
                 <AccordionTrigger className="text-lg font-semibold">
-                  Risk Behaviour
+                  <div className="flex items-center gap-4">
+                    <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">Risk Behaviour</span>
+                  </div>
+
                 </AccordionTrigger>
                 <AccordionContent className="pt-4 pb-2">
                   <TooltipProvider>
@@ -318,7 +323,12 @@ const Reg_followup = () => {
               </AccordionItem>
               {/* Vital Sign */}
               <AccordionItem value="item-3" className="bg-[#f9f7f7] p-4">
-                <AccordionTrigger className="text-lg font-semibold">Vital Sign</AccordionTrigger>
+                <AccordionTrigger className="text-lg font-semibold">
+                  <div className="flex items-center gap-4">
+                    <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">Vital Sign</span>
+                  </div>
+
+                </AccordionTrigger>
                 <AccordionContent className="pt-4 pb-2 space-y-4">
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="weight">Body Weight (lb) <span className="text-red-500">*</span></Label>
@@ -360,7 +370,9 @@ const Reg_followup = () => {
               </AccordionItem>
               {/* Lab Investigation */}
               <AccordionItem value="item-4" className="bg-[#f9f7f7] p-4 w-[100%]">
-                <AccordionTrigger className="text-lg font-semibold w-full">Lab Investigation</AccordionTrigger>
+                <AccordionTrigger className="text-lg font-semibold w-full">
+                  <span><span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">Lab Investigation</span></span>
+                </AccordionTrigger>
                 <AccordionContent className="pt-4 pb-2 space-y-6">
                   {/* HIV Testing */}
                   <div className="space-y-2 w-full ">
@@ -379,11 +391,11 @@ const Reg_followup = () => {
                           </div>
                         </RadioGroup>
                         <Input placeholder="Age" type="number" className="bg-white" />
-                          <IconlessDatePicker
-                            date={hivTestDate}
-                            setDate={setHivTestDate}
-                            placeholder="Test Date"
-                          />
+                        <IconlessDatePicker
+                          date={hivTestDate}
+                          setDate={setHivTestDate}
+                          placeholder="Test Date"
+                        />
                         {[1, 2, 3].map((i) => (
                           <Select key={i}>
                             <SelectTrigger><SelectValue placeholder={`Test ${i}`} /></SelectTrigger>
@@ -487,7 +499,9 @@ const Reg_followup = () => {
               </AccordionItem>
               {/* Treatment */}
               <AccordionItem value="item-5" className="bg-[#f9f7f7] p-4">
-                <AccordionTrigger className="text-lg font-semibold">Treatment</AccordionTrigger>
+                <AccordionTrigger className="text-lg font-semibold">
+                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">Treatment</span>
+                </AccordionTrigger>
                 <AccordionContent className="pt-4 pb-2 space-y-6">
                   <div className="space-y-2">
                     <Label className="font-semibold">Refer For:</Label>

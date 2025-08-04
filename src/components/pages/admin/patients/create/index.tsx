@@ -218,7 +218,7 @@ export default function CreatePatient() {
   };
 
   const handleClick = () => {
-    navigate('/home/regfollowup');
+    navigate('regfollowup');
   };
 
   return (
