@@ -399,7 +399,7 @@ export default function CreatePatient() {
                   <Button
                     type="button"
                     onClick={handleHeightConvert}
-                    className="px-4 py-2 rounded-md bg-gradient-to-r from-[#051463] via-blue-700 to-blue-400 text-white font-semibold shadow transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#051463]"
+                    className="px-4 py-2 rounded-md bg-[#051463] text-white font-semibold shadow transition hover:-translate-y-0.5 hover:shadow-lg hover:bg-[#051463] focus:outline-none focus:ring-2 focus:ring-[#051463]"
                   >
                     Convert to cm
                   </Button>
@@ -837,7 +837,7 @@ export default function CreatePatient() {
               <Button
                 type="button"
                 onClick={handleClick}
-                className="flex items-center gap-2 px-8 py-3 rounded-lg bg-gradient-to-r from-[#051463] via-blue-700 to-blue-400 text-white font-bold text-lg shadow-lg transition-all duration-200 hover:-translate-y-1 hover:shadow-xl hover:from-blue-800 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-[#051463]"
+                className="flex items-center gap-2 px-8 py-3 rounded-lg bg-[#051463] text-white font-bold text-lg shadow-lg transition-all duration-200 hover:-translate-y-1 hover:shadow-xl hover:bg-[#051463] focus:outline-none focus:ring-2 focus:ring-[#051463]"
               >
                 <UserPlus className="w-5 h-5 text-white" />
                 Save

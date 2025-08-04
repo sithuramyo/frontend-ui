@@ -6,11 +6,12 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
-import { UserCheck, AlertTriangle, Syringe, Shield, HelpCircle, CheckCircle2, XCircle } from "lucide-react";
+import { UserCheck, AlertTriangle, Syringe, Shield, HelpCircle, CheckCircle2, XCircle, UserPlus } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
 import { IconlessDatePicker } from "@/components/ui/iconless-date-picker";
+import { toast } from "sonner";
 
 const testOptions = ["-- Select --", "Reactive", "Non-Reactive", "Invalid"];
 const urineTests = ["Morphine", "Amphetamine", "Cannabis", "Diazepam", "Methadone"];
@@ -105,6 +106,11 @@ const FollowUp = () => {
   const handleExpandAll = () => setOpenAccordions(accordionKeys);
   const handleCollapseAll = () => setOpenAccordions([]);
 
+  const handleClick = () => {
+    toast.success('Form submitted successfully!', {
+      position: "top-right"
+    });
+  };
   return (
     <div className="flex flex-col min-h-screen bg-muted/50">
       <div className="w-full max-w-7xl mx-auto px-4 pt-8 pb-6">
@@ -808,6 +814,16 @@ const FollowUp = () => {
                   </div>
                 </AccordionContent>
               </AccordionItem>
+              <div className="lg:col-span-3 md:col-span-2 flex justify-center lg:justify-end gap-4 pt-4 border-t mt-8 bg-blue-50 rounded-xl shadow-sm px-6 py-6">
+                <Button
+                  type="button"
+                  onClick={handleClick}
+                  className="flex items-center gap-2 px-8 py-3 rounded-lg bg-[#051463] text-white font-bold text-lg shadow-lg transition-all duration-200 hover:-translate-y-1 hover:shadow-xl hover:bg-[#051463] focus:outline-none focus:ring-2 focus:ring-[#051463]"
+                >
+                  <UserPlus className="w-5 h-5 text-white" />
+                  Save
+                </Button>
+              </div>
             </Accordion>
           </CardContent>
         </Card>
