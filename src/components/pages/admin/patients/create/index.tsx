@@ -139,13 +139,6 @@ export default function CreatePatient() {
   const [hepbTreatmentReceived, setHepbTreatmentReceived] = useState("");
   // const [hepbStartDate, setHepbStartDate] = useState<Date | undefined>(undefined);
 
-  const [tbTreatmentReceived, setTbTreatmentReceived] = useState("no");
-  // const [tbScreening, setTbScreening] = useState("no");
-  const [tbRegimen, setTbRegimen] = useState("");
-  // const [mentalHealthScreening, setMentalHealthScreening] = useState("yes");
-
-  const [tbScreeningChecked, setTbScreeningChecked] = useState(false);
-  const [mentalHealthScreeningChecked, setMentalHealthScreeningChecked] = useState(false);
 
 
   // --- Helper functions for DOB and Age ---
@@ -764,7 +757,7 @@ export default function CreatePatient() {
             </div>
 
             {/* TB & Mental Health */}
-            <div className="md:col-span-2 lg:col-span-3">
+            {/* <div className="md:col-span-2 lg:col-span-3">
               <Card className="mt-4 shadow-lg rounded-2xl border-0 bg-white/95">
                 <div className="flex items-center gap-3 px-8 py-4 rounded-t-2xl bg-[#051463] mb-4 shadow">
                   <User className="w-6 h-6 text-white drop-shadow" />
@@ -773,7 +766,6 @@ export default function CreatePatient() {
                   </h2>
                 </div>
                 <CardContent className="pt-0 pb-6">
-                  {/* TB and Mental Health Section - updated to pass all InputGroup props where used */}
                   <div className="flex flex-col gap-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="flex flex-col gap-2">
@@ -794,7 +786,7 @@ export default function CreatePatient() {
                           <div className="flex items-center gap-5">
                             <div className="flex items-center gap-2">
                               <Label htmlFor="tb-screening-checkbox">TB Screening</Label>
-                              <div className="flex items-center space-x-2"> {/* Added a div for alignment */}
+                              <div className="flex items-center space-x-2"> 
                                 <Checkbox
                                   id="tb-screening-checkbox"
                                   checked={mentalHealthScreeningChecked}
@@ -809,7 +801,6 @@ export default function CreatePatient() {
                           </div>
                         )
                       }
-                      {/* Updated to use InputGroup with all props */}
                       {
                         tbTreatmentReceived === "yes" && (
                           <>
@@ -822,7 +813,7 @@ export default function CreatePatient() {
                     <div className="flex items-center gap-[340px]">
                       <div className="flex gap-2">
                         <Label>Mental Health Screening</Label>
-                        <div className="flex items-center space-x-2"> {/* Added a div for alignment */}
+                        <div className="flex items-center space-x-2">
                           <Checkbox
                             id="tb-screening-checkbox"
                             checked={tbScreeningChecked}
@@ -840,9 +831,8 @@ export default function CreatePatient() {
                   </div>
                 </CardContent>
               </Card>
-            </div>
+            </div> */}
 
-            {/* Submit Button at the end */}
             <div className="lg:col-span-3 md:col-span-2 flex justify-center lg:justify-end gap-4 pt-4 border-t mt-8 bg-blue-50 rounded-xl shadow-sm px-6 py-6">
               <Button
                 type="button"

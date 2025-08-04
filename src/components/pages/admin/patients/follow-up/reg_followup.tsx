@@ -45,6 +45,14 @@ const Reg_followup = () => {
   const [frequencyOfDrugUse, setFrequencyOfDrugUse] = useState("");
   const [whenLastUse, setWhenLastUse] = useState("");
 
+  const [tbTreatmentReceived, setTbTreatmentReceived] = useState("no");
+  // const [tbScreening, setTbScreening] = useState("no");
+  const [tbRegimen, setTbRegimen] = useState("");
+  // const [mentalHealthScreening, setMentalHealthScreening] = useState("yes");
+
+  const [tbScreeningChecked, setTbScreeningChecked] = useState(false);
+  const [mentalHealthScreeningChecked, setMentalHealthScreeningChecked] = useState(false);
+
   // Accordion expand/collapse all logic
   const accordionKeys = [
     "item-1", // Drug History
@@ -593,6 +601,83 @@ const Reg_followup = () => {
                         </div>
                       ))}
                     </RadioGroup>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+              {/* TB & Mental Health */}
+              <AccordionItem value="item-tb-mental" className="bg-[#f9f7f7] p-4">
+                <AccordionTrigger className="text-lg font-semibold">
+                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">TB & Mental Health</span>
+                </AccordionTrigger>
+                <AccordionContent className="pt-4 pb-2 space-y-4">
+                  <div className="flex flex-col gap-8 p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="flex flex-col gap-2">
+                        <Label>Current TB treatment received or not?</Label>
+                        <RadioGroup value={tbTreatmentReceived} onValueChange={setTbTreatmentReceived} className="flex flex-row gap-4">
+                          <div className="flex items-center gap-2">
+                            <RadioGroupItem value="yes" id="tb-yes" />
+                            <Label htmlFor="tb-yes">Yes</Label>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <RadioGroupItem value="no" id="tb-no" />
+                            <Label htmlFor="tb-no">No</Label>
+                          </div>
+                        </RadioGroup>
+                      </div>
+                      {
+                        tbTreatmentReceived === "no" && (
+                          <div className="flex items-center gap-5">
+                            <div className="flex items-center gap-2">
+                              <Label htmlFor="tb-screening-checkbox">TB Screening</Label>
+                              <div className="flex items-center space-x-2">
+                                <Checkbox
+                                  id="tb-screening-checkbox"
+                                  checked={mentalHealthScreeningChecked}
+                                  onCheckedChange={(checked) => setMentalHealthScreeningChecked(Boolean(checked))}
+                                />
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Label htmlFor="tb-screening-checkbox">Refer For TB Treatment</Label>
+                              <Checkbox id="tb-screening-checkbox" />
+                            </div>
+                          </div>
+                        )
+                      }
+                      {
+                        tbTreatmentReceived === "yes" && (
+                          // The InputGroup has been replaced with this div containing a Label and Input
+                          <div className="flex flex-col gap-2">
+                            <Label htmlFor="tb-regimen">TB Regimen</Label>
+                            <Input
+                              id="tb-regimen"
+                              placeholder="TB Regimen"
+                              value={tbRegimen}
+                              onChange={(e) => setTbRegimen(e.target.value)}
+                            />
+                          </div>
+                        )
+                      }
+                    </div>
+                    <div className="flex items-center gap-[298px]">
+                      <div className="flex gap-2">
+                        <Label>Mental Health Screening</Label>
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="mental-screening-checkbox"
+                            checked={tbScreeningChecked}
+                            onCheckedChange={(checked) => setTbScreeningChecked(Boolean(checked))}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <Label htmlFor="mental-referral-checkbox">Refer For Mental Health Treatment</Label>
+                          <Checkbox id="mental-referral-checkbox" />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </AccordionContent>
               </AccordionItem>
