@@ -78,4 +78,10 @@ export const sidebarItems: SidebarMenuItem[] = [
     path: "/home/dispense",
     icon: Cog,
   },
+  {
+    id: 9,
+    label: "New Dashboard",
+    path: "/iconOnlyHome",
+    icon: Cog,
+  }
 ];
