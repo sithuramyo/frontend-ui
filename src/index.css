@@ -159,3 +159,24 @@
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
+
+/* In your CSS file (e.g., index.css) */
+
+
+
+.glass-bg {
+  position: relative;
+  background: rgba(255, 255, 255, 0.1); /* or use a dark transparent background for dark mode */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); /* for Safari */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: full;
+  overflow: hidden;
+
+}
+
+.light-bg {
+   background: rgba(255, 255, 255, 0.1);  /* Transparent white */
+backdrop-filter: blur(12px);
+border: 1px solid rgba(255, 255, 255, 0.15);
+}

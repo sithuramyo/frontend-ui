@@ -8,7 +8,7 @@ export default function TabsComponent() {
   const [activeTab, setActiveTab] = useState("stockLedger");
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 pt-8 pb-2 flex h-full ">
+    <div className="w-full max-w-7xl mx-auto px-4 pt-8 pb-2 flex h-full bg-blue-50 p-12 shadow-lg rounded-xl">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full  ">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="stockLedger">Stock Ledger</TabsTrigger>

@@ -17,6 +17,14 @@ import {
   Worm,
   CalendarCheck,
   Skull,
+  Package,
+  Syringe,
+  TestTube,
+  ArrowDownToLine,
+  ArrowUpFromLine,
+  Settings,
+  DatabaseBackup,
+  User,
 } from "lucide-react";
 
 export const sidebarItems: SidebarMenuItem[] = [
@@ -217,32 +225,31 @@ export const operaLongSidebarItems: SidebarMenuItem[] = [
     id: 1,
     label: "Take Home List",
     path: "",
-    icon: Home,
+    icon: Package, // Represents a package of medicine for a patient.
   },
   {
     id: 2,
     label: "Treated List",
     path: "",
-    icon: UsersRound,
+    icon: Syringe, // A clear and direct icon for medical treatment.
   },
   {
     id: 3,
     label: "Urine Test List",
     path: "",
-    icon: SoapDispenserDroplet,
-  },
-
-  {
-    id: 3,
-    label: "Transfer In List",
-    path: "",
-    icon: Boxes,
+    icon: TestTube, // A universally recognized icon for a laboratory test.
   },
   {
     id: 4,
+    label: "Transfer In List",
+    path: "",
+    icon: ArrowDownToLine, // Visually indicates data or items being moved into the system.
+  },
+  {
+    id: 5,
     label: "Transfer Out List",
     path: "",
-    icon: LayoutDashboard,
+    icon: ArrowUpFromLine, // The opposite of 'Transfer In', showing data or items leaving.
   },
 ];
 
@@ -251,12 +258,76 @@ export const operaShortSidebarItems: SidebarMenuItem[] = [
     id: 1,
     label: "Dispenser control",
     path: "",
-    icon: Home,
+    icon: Settings, // A standard icon for system controls and settings.
   },
   {
     id: 2,
     label: "Data backup",
     path: "",
-    icon: UsersRound,
-  }
+    icon: DatabaseBackup, // A specific icon for backing up a database.
+  },
+];
+
+export const entryItems: SidebarMenuItem[] = [
+  {
+    id: 1,
+    label: "Home",
+    path: "/operalikeHome/dashboard",
+    icon: Home,
+  },
+  {
+    id: 2,
+    label: "Client Registration",
+    path: "/operalikeHome/registration",
+    icon: User,
+  },
+  {
+    id: 2,
+    label: "Follow Up",
+    path: "/operalikeHome/patient",
+    icon: User,
+  },
+  {
+    id: 3,
+    label: "Daily Operation",
+    path: "/operalikeHome/daily-operation",
+    icon: SoapDispenserDroplet,
+  },
+
+  {
+    id: 4,
+    label: "Inventory",
+    path: "/operalikeHome/inventory",
+    icon: Boxes,
+  },
+  {
+    id: 5,
+    label: "Facility Dashboard",
+    path: "/facility/dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    id: 6,
+    label: "Reports",
+    path: "/operalikeHome/reports",
+    icon: FileText,
+  },
+  {
+    id: 7,
+    label: "Backup Database",
+    path: "/operalikeHome/backup",
+    icon: Database,
+  },
+  {
+    id: 8,
+    label: "Individual Export Data",
+    path: "/operalikeHome/export",
+    icon: UploadCloud,
+  },
+  {
+    id: 9,
+    label: "Dispenser Control",
+    path: "/operalikeHome/dispense",
+    icon: Cog,
+  },
 ];

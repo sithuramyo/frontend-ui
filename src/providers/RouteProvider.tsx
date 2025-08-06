@@ -21,6 +21,8 @@ import BCCoInfection from "@/pages/Facility/BCCoInfection";
 import SixMonthsRetention from "@/pages/Facility/SixMonthsRetention";
 import ExpiredAndCauseOfDeath from "@/pages/Facility/ExpiredAndCauseOfDeath";
 import FacilityLayout from "@/layouts/FacilityLayout";
+import OperaAirLayout from "@/layouts/OperaAirLayout";
+import EntryPage from "@/pages/OperaAir/EntryPage";
 
 export const router = createBrowserRouter([
   {
@@ -88,6 +90,26 @@ export const router = createBrowserRouter([
       { path: 'b-c-co-infection', element: <BCCoInfection /> },
       { path: 'six-months-retention', element: <SixMonthsRetention /> },
       { path: 'expired-and-cause-of-death', element: <ExpiredAndCauseOfDeath /> }
+    ],
+  },
+  {
+    path: '/operalikeHome',
+    element: (
+      <OperaAirLayout />
+      // <ProtectedRoute>
+      // <HomeLayout />
+      // </ProtectedRoute>
+    ),
+    children: [
+      { index: true, element:<EntryPage />},
+      { path: 'dashboard', element: <Dashboard /> },
+      { path: 'patient', element: <PatientPage /> },
+      { path: 'registration', element: <CreatePatientPage /> },
+      { path: 'daily-operation', element: <DailyOperationPage /> },
+      { path: 'inventory', element: <InventoryPage /> },
+      { path: 'dispense', element: <Dispensing /> },
+      { path: 'patient/follow-up', element: <FollowUp /> },
+      { path: 'registration/regfollowup', element: <Reg_followup /> }
     ],
   },
   {
