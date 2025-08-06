@@ -9,6 +9,14 @@ import {
   SoapDispenserDroplet,
   Cog,
   LayoutDashboardIcon,
+  CloudDownload,
+  Users,
+  Warehouse,
+  Pill,
+  LineChart,
+  Worm,
+  CalendarCheck,
+  Skull,
 } from "lucide-react";
 
 export const sidebarItems: SidebarMenuItem[] = [
@@ -52,7 +60,7 @@ export const sidebarItems: SidebarMenuItem[] = [
   {
     id: 4,
     label: "Facility Dashboard",
-    path: "/home/facility-dashboard",
+    path: "/facility/dashboard",
     icon: LayoutDashboard,
   },
   {
@@ -84,7 +92,7 @@ export const sidebarItems: SidebarMenuItem[] = [
     label: "New Dashboard",
     path: "/iconOnlyHome/dashboard",
     icon: LayoutDashboardIcon,
-  }
+  },
 ];
 
 export const iconSidebarItems: SidebarMenuItem[] = [
@@ -97,7 +105,7 @@ export const iconSidebarItems: SidebarMenuItem[] = [
   {
     id: 2,
     label: "Clients",
-    icon: UsersRound,
+    icon: Users,
     isDropdown: true,
     // Add a parent path for the dropdown
     path: "/iconOnlyHome/clients",
@@ -125,7 +133,7 @@ export const iconSidebarItems: SidebarMenuItem[] = [
     id: 4,
     label: "Inventory",
     path: "/iconOnlyHome/inventory",
-    icon: Boxes,
+    icon: Warehouse,
   },
   {
     id: 5,
@@ -149,7 +157,7 @@ export const iconSidebarItems: SidebarMenuItem[] = [
     id: 8,
     label: "Individual Export Data",
     path: "/iconOnlyHome/export",
-    icon: UploadCloud,
+    icon: CloudDownload,
   },
   {
     id: 9, // Fix the duplicate ID
@@ -162,5 +170,46 @@ export const iconSidebarItems: SidebarMenuItem[] = [
     label: "Back to prev Dashboard",
     path: "/home/dashboard",
     icon: LayoutDashboardIcon,
+  },
+];
+
+
+
+export const FacilitySidebarItems: SidebarMenuItem[] = [
+  {
+    id: 1,
+    label: "Dashboard",
+    path: "/facility/dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    id: 2,
+    label: "Drugs Treatment",
+    path: "/facility/drugs-treatment",
+    icon: Pill,
+  },
+  {
+    id: 3,
+    label: "MMT-ART Cascade",
+    path: "/facility/mmt-art-cascade",
+    icon: LineChart,
+  },
+  {
+    id: 4,
+    label: "B-C Co-Infection",
+    path: "/facility/b-c-co-infection",
+    icon: Worm,
+  },
+  {
+    id: 5,
+    label: "Six Months Retention",
+    path: "/facility/six-months-retention",
+    icon: CalendarCheck,
+  },
+  {
+    id: 6,
+    label: "Expired and Cause of Death",
+    path: "/facility/expired-and-cause-of-death",
+    icon: Skull,
   },
 ];

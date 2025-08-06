@@ -1,61 +1,59 @@
-import React from 'react';
+// src/components/ui/DataTableWithExport.tsx
 
-// Define the props interface
-interface UserTableProps {
+import * as XLSX from 'xlsx';
+import { Button } from '@/components/ui/button';
+import DataTable, { type Column } from '@/components/ui/data-table';
+import { toast } from 'sonner';
+import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
+
+// Define a generic type for the table data
+interface TableData {
+  [key: string]: any;
+}
+
+// Props for the reusable component
+interface UserTableProps<T extends TableData> {
   cardTitle: string;
+  data: T[];
+  columns: Column<T>[];
+  onRowClick?: (row: T) => void;
 }
 
-// Define the user data type
-interface User {
-  id: number;
-  name: string;
-  email: string;
-}
+const UserTable = <T extends TableData>({
+  cardTitle,
+  data,
+  columns,
+  onRowClick,
+}: UserTableProps<T>) => {
+  const handleExport = () => {
+    if (!data || data.length === 0) {
+      toast.error("No data to export.");
+      return;
+    }
 
-const UserTable: React.FC<UserTableProps> = ({ cardTitle }) => {
-  const users: User[] = [
-    { id: 1, name: 'Alice', email: 'alice@example.com' },
-    { id: 2, name: 'Bob', email: 'bob@example.com' },
-    { id: 3, name: 'Charlie', email: 'charlie@example.com' },
-  ];
+    // This converts the data array into a worksheet.
+    // The keys of the objects in the array will become the column headers.
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, cardTitle);
+    XLSX.writeFile(wb, `${cardTitle.toLowerCase().replace(/\s/g, '_')}_data.xlsx`);
+    toast.success(`${cardTitle} exported successfully!`);
+  };
 
   return (
     <div className="p-4 rounded-lg border">
-      <h2 className="text-xl font-semibold mb-4">
-        {cardTitle} - User List
-      </h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                ID
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Name
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Email
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {users.map((user) => (
-              <tr key={user.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {user.id}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {user.name}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {user.email}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold">{cardTitle} - User List</h2>
+        <Button
+          onClick={handleExport}
+          variant="outline"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-md transition-colors text-green-600"
+        > 
+          <PiMicrosoftExcelLogoFill />
+          Export to Excel
+        </Button>
       </div>
+      <DataTable<T> data={data} columns={columns} onRowClick={onRowClick} />
     </div>
   );
 };

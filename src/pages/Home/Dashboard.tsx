@@ -1,24 +1,61 @@
+// src/components/dashboard/Dashboard.tsx
+
 import { Toggle } from "@/components/ui/toggle";
+import AbsentMoreThan5DaysTable from "@/components/UserTable/AbsentMoreThan5DaysTable";
+import CurrentClientsTable from "@/components/UserTable/CurrentClientsTable";
+import TodaysAppointmentsTable from "@/components/UserTable/TodaysAppointmentsTable";
+import TotalRegisterTable from "@/components/UserTable/TotalRegisterTable";
 import { useState } from "react";
-import DashboardCards from "./Dashboard/DashboardCards";
 import DashboardCharts from "./Dashboard/DashboardCharts";
-import UserTable from "./Dashboard/UserTable";
+import DashboardCards from "./Dashboard/DashboardCards";
+
+// Import the specific user list components
+
+
+// Define a type for the component mapping
+type UserListComponent = React.FC;
+
+// Create a mapping object from card title to component
+const userListComponents: Record<string, UserListComponent> = {
+  'Current Clients': CurrentClientsTable,
+  'Total Register': TotalRegisterTable,
+  'Today\'s Appointments': TodaysAppointmentsTable,
+  'Absent more than 5 Days': AbsentMoreThan5DaysTable,
+};
 
 const Dashboard = () => {
-  // Use a union type for the view state: 'charts' or 'users'
   const [view, setView] = useState<'charts' | 'users'>('charts');
-
-  // The activeCard state is a simple string
   const [activeCard, setActiveCard] = useState<string>('');
 
   const handleCardClick = (cardTitle: string) => {
-    setView('users');
-    setActiveCard(cardTitle);
+    // Only switch to 'users' view if the card title exists in our mapping
+    if (userListComponents[cardTitle]) {
+      setView('users');
+      setActiveCard(cardTitle);
+    }
   };
 
   const handleToggleCharts = () => {
     setView('charts');
     setActiveCard('');
+  };
+
+  // Determine which component to render
+  const renderContent = () => {
+    if (view === 'charts') {
+      return <DashboardCharts />;
+    } else {
+      // Look up the component from the mapping object
+      const UserListComponentToRender = userListComponents[activeCard];
+      // Render the component if it exists, otherwise show a message or null
+      return UserListComponentToRender ? (
+        <UserListComponentToRender />
+      ) : (
+        <div className="p-4 rounded-lg border text-center">
+          <p>Please select a card to view the user list.</p>
+        </div>
+      );
+    }
   };
 
   return (
@@ -38,11 +75,7 @@ const Dashboard = () => {
       <DashboardCards onCardClick={handleCardClick} activeCard={activeCard} />
 
       {/* Conditional Rendering Section */}
-      {view === 'charts' ? (
-        <DashboardCharts />
-      ) : (
-        <UserTable cardTitle={activeCard} />
-      )}
+      {renderContent()}
     </div>
   );
 };

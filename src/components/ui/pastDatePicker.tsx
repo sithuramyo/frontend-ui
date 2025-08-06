@@ -1,5 +1,3 @@
-// src/components/ui/date-picker.tsx
-
 import * as React from "react";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
@@ -7,23 +5,28 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
-interface DatePickerProps {
+interface PastDatePickerProps {
   date: Date | undefined;
   setDate: (date: Date | undefined) => void;
   placeholder?: string;
-  className?: string;
 }
 
-export function DatePicker({ date, setDate, placeholder = "Pick a date", className, ...props }: DatePickerProps) {
+export function PastDatePicker({
+  date,
+  setDate,
+  placeholder = "Pick a date",
+}: PastDatePickerProps) {
   const [open, setOpen] = React.useState(false);
 
-  const handleSelect = (selectedDate: Date | undefined) => {
-    setDate(selectedDate);
-    // Always close the popover after a date selection
-    setOpen(false);
-  };
+  // ✅ Normalize today to midnight (very important!)
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -31,11 +34,9 @@ export function DatePicker({ date, setDate, placeholder = "Pick a date", classNa
         <Button
           variant="outline"
           className={cn(
-            "w-full justify-start text-left font-normal bg-white",
-            !date && "text-muted-foreground",
-            className
+            "w-full justify-start text-left font-normal",
+            !date && "text-muted-foreground"
           )}
-          {...props}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date ? format(date, "dd/MM/yyyy") : <span>{placeholder}</span>}
@@ -45,9 +46,15 @@ export function DatePicker({ date, setDate, placeholder = "Pick a date", classNa
         <Calendar
           mode="single"
           selected={date}
-          onSelect={handleSelect}
+          onSelect={(selected) => {
+            if (selected && selected <= today) {
+              setDate(selected);
+              setOpen(false);
+            }
+          }}
           initialFocus
           captionLayout="dropdown"
+          disabled={{ after: today }}
         />
       </PopoverContent>
     </Popover>

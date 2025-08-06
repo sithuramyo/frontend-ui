@@ -5,15 +5,20 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UserCheck, AlertTriangle, Syringe, Shield, HelpCircle, CheckCircle2, XCircle, UserPlus } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
 import { IconlessDatePicker } from "@/components/ui/iconless-date-picker";
 import { toast } from "sonner";
+// import { PastDatePicker } from "@/components/ui/pastDatePicker";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+
+
 
 const testOptions = ["-- Select --", "Reactive", "Non-Reactive", "Invalid"];
+const finalOptions = ["-- Select --", "Positive", "Negative", "Inconclusive"];
 const urineTests = ["Morphine", "Amphetamine", "Cannabis", "Diazepam", "Methadone"];
 
 const outcomeOptions = [
@@ -58,6 +63,19 @@ const sideEffects = [
   "Blurred Vision", "Weakness", "Hallucination", "Sexual Problem",
 ];
 
+// --- Types for HIV results ---
+type HivTestResult = "Reactive" | "Non-Reactive" | "Invalid" | null;
+type HivFinalResult = "Positive" | "Negative" | "Inconclusive" | null;
+type HivTestKey = 'test1' | 'test2' | 'test3';
+
+interface HivResults {
+  [key: string]: {
+    test1: HivTestResult;
+    test2: HivTestResult;
+    test3: HivTestResult;
+    final: HivFinalResult;
+  };
+}
 
 const FollowUp = () => {
   const drugTypes = ["Opioid", "Stimulant", "Depressant", "Hallucinogen", "Other"];
@@ -67,10 +85,11 @@ const FollowUp = () => {
 
   // Date states for the new DatePickers
   const [visitDate, setVisitDate] = useState<Date | undefined>(new Date());
-  const [hivTestDate, setHivTestDate] = useState<Date | undefined>(undefined);
+  // const [hivTestDate, setHivTestDate] = useState<Date | undefined>(undefined);
   const [testDateHepB, setTestDateHepB] = useState<Date | undefined>(undefined);
   const [testDateHepC, setTestDateHepC] = useState<Date | undefined>(undefined);
   const [treatmentStartDate, setTreatmentStartDate] = useState<Date | undefined>(undefined);
+  const [nextAppointmentDate, setNextAppointmentDate] = useState<Date | undefined>(undefined);
   const [outcomeDate, setOutcomeDate] = useState<Date | undefined>(undefined);
   const [urineTestDates, setUrineTestDates] = useState<{ [key: string]: Date | undefined }>({});
 
@@ -99,6 +118,55 @@ const FollowUp = () => {
   const [selectedInterruptionOption, setSelectedInterruptionOption] = useState("");
   const [selectedTransferoutCenter, setSelectedTransferoutCenter] = useState("");
 
+  // --- HIV Test Dates State & Logic ---
+  const [hivTestDates, setHivTestDates] = useState<{ [key: string]: Date | undefined }>({
+    Self: undefined,
+    "Partner 1": undefined,
+    "Partner 2": undefined,
+  });
+
+  const [syphilisTestDates, setSyphilisTestDates] = useState<{ [key: string]: Date | undefined }>({
+    Self: undefined,
+    "Partner 1": undefined,
+    "Partner 2": undefined,
+  });
+
+
+  // --- HIV Results State & Logic ---
+  const [hivResults, setHivResults] = useState<HivResults>({
+    Self: { test1: null, test2: null, test3: null, final: null },
+    "Partner 1": { test1: null, test2: null, test3: null, final: null },
+    "Partner 2": { test1: null, test2: null, test3: null, final: null },
+  });
+
+  const handleHivDateChange = (role: string, date: Date | undefined) => {
+    setHivTestDates(prevDates => ({
+      ...prevDates,
+      [role]: date,
+    }));
+  };
+
+  // Handler for updating Syphilis test dates
+  const handleSyphilisDateChange = (role: string, date: Date | undefined) => {
+    setSyphilisTestDates(prevDates => ({
+      ...prevDates,
+      [role]: date,
+    }));
+  };
+
+  const [hepbVaccineDates, setHepbVaccineDates] = useState<{ [key: number]: Date | undefined }>({
+    1: undefined,
+    2: undefined,
+    3: undefined,
+  });
+
+  const handleHepBVaccineChange = (doseNumber: number, date: Date | undefined) => {
+    setHepbVaccineDates(prevDates => ({
+      ...prevDates,
+      [doseNumber]: date,
+    }));
+  };
+
   const accordionKeys = [
     "item-1", "item-2", "item-3", "item-4", "item-5", "item-6", "item-7", "item-8",
   ];
@@ -111,6 +179,52 @@ const FollowUp = () => {
       position: "top-right"
     });
   };
+
+  // lab investigation
+  const handleHivTestChange = (role: string, testNumber: number, value: string) => {
+    const safeValue = value === "-- Select --" ? null : value as HivTestResult;
+    setHivResults(prevResults => ({
+      ...prevResults,
+      [role]: { ...prevResults[role], [`test${testNumber}`]: safeValue },
+    }));
+  };
+
+  const getFinalHivResult = (test1Result: HivTestResult, test2Result: HivTestResult, test3Result: HivTestResult): HivFinalResult => {
+    if (test1Result === "Non-Reactive") return "Negative";
+    if (test1Result === "Reactive" && test2Result === "Reactive" && test3Result === "Reactive") return "Positive";
+    if (
+      (test1Result === "Reactive" && test2Result === "Reactive" && test3Result === "Non-Reactive") ||
+      (test1Result === "Reactive" && test2Result === "Non-Reactive" && test3Result === "Reactive")
+    ) return "Inconclusive";
+    if (test1Result === "Reactive" && test2Result === "Non-Reactive" && test3Result === "Non-Reactive") return "Negative";
+
+    return null;
+  };
+
+  // Handler for updating HIV test dates
+
+
+  useEffect(() => {
+    ["Self", "Partner 1", "Partner 2"].forEach((role) => {
+      const { test1, test2, test3 } = hivResults[role];
+
+      if (test1 && test2 && test3) {
+        const newFinalResult = getFinalHivResult(test1, test2, test3);
+        if (newFinalResult !== hivResults[role].final) {
+          setHivResults((prevResults) => ({
+            ...prevResults,
+            [role]: { ...prevResults[role], final: newFinalResult },
+          }));
+        }
+      } else if (hivResults[role].final) {
+        setHivResults((prevResults) => ({
+          ...prevResults,
+          [role]: { ...prevResults[role], final: null },
+        }));
+      }
+    });
+  }, [hivResults]);
+  //
   return (
     <div className="flex flex-col min-h-screen bg-muted/50">
       <div className="w-full max-w-7xl mx-auto px-4 pt-8 pb-6">
@@ -120,27 +234,51 @@ const FollowUp = () => {
         <p className="text-muted-foreground text-base mb-8 max-w-2xl">
           Record and manage follow-up information for clients. Complete all relevant sections accurately.
         </p>
-        <div className="flex gap-2 mb-4 justify-end">
-          <Button
-            type="button"
-            className="px-4 py-2 rounded-md font-semibold"
-            onClick={handleExpandAll}
-          >
-            Expand All
-          </Button>
-          <Button
-            type="button"
-            className="px-4 py-2 rounded-md font-semibold"
-            onClick={handleCollapseAll}
-          >
-            Collapse All
-          </Button>
-        </div>
+
         <Card className="shadow-2xl rounded-2xl border-0 bg-white/95">
           <CardContent className="pt-0">
-            <div className="rounded-t-2xl bg-[#051463] px-8 py-6 flex items-center gap-3 mb-8 shadow-md">
-              <UserCheck className="w-8 h-8 text-white drop-shadow" />
-              <h2 className="text-3xl font-extrabold text-white tracking-tight">Follow-Up Form</h2>
+            <div className="rounded-t-2xl bg-gray-700 px-8 py-6 flex items-center justify-between gap-3 mb-8 shadow-md" >
+              {/* Patient ID */}
+              <div className="flex items-start gap-2 w-full">
+                <Label htmlFor="patient-no" className="font-semibold  text-white text-xl">
+                  Client ID
+                </Label>
+                <div className="flex flex-col items-center gap-2">
+                  <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#FAFAFA] text-md text-[#051463] font-bold font-mono">
+                    001/000001
+                  </div>
+                </div>
+              </div>
+              {/* Expand/Collapse All */}
+              <div className="flex gap-2 justify-end">
+                {/* Expand All */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type="button"
+                      className="px-2 py-2 rounded-md font-semibold"
+                      onClick={handleExpandAll}
+                    >
+                      <IoIosArrowDown />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Expand all</TooltipContent>
+                </Tooltip>
+
+                {/* Collapse All */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type="button"
+                      className="px-2 py-2 rounded-md font-semibold"
+                      onClick={handleCollapseAll}
+                    >
+                      <IoIosArrowUp />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Collapse all</TooltipContent>
+                </Tooltip>
+              </div>
             </div>
             {/* Visit Date Section */}
             <div className="flex flex-col md:flex-row w-full justify-between gap-8 px-6 pb-8">
@@ -154,16 +292,7 @@ const FollowUp = () => {
                   placeholder="Select Visit Date"
                 />
               </div>
-              <div className="flex items-start gap-2 w-full justify-end">
-                <Label htmlFor="patient-no" className="font-semibold text-base text-primary">
-                  Patient No
-                </Label>
-                <div className="flex flex-col items-center gap-2">
-                  <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#FAFAFA] text-sm text-gray-600 font-mono">
-                    001/000001
-                  </div>
-                </div>
-              </div>
+
             </div>
             {/* Accordion */}
             <Accordion
@@ -173,12 +302,11 @@ const FollowUp = () => {
               onValueChange={setOpenAccordions}
             >
               {/* Drug History */}
-              <AccordionItem value="item-1" className="bg-[#f9f7f7] p-4">
+              <AccordionItem value="item-1" className="bg-[#f9f7f7] py-4 pr-4 data-[state=open]:bg-blue-50">
                 <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">Drug Use History</span>
-                
+                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-r-full px-3 py-1">Drug Use History</span>
                 </AccordionTrigger>
-                <AccordionContent className="pt-4 pb-2">
+                <AccordionContent className="pt-4 pb-2 pl-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="flex flex-col gap-2">
                       <Label>Current Drug Use Within 6 Month <span className="text-red-500">*</span></Label>
@@ -255,11 +383,11 @@ const FollowUp = () => {
                 </AccordionContent>
               </AccordionItem>
               {/* Risk Behaviour */}
-              <AccordionItem value="item-2" className="bg-[#f9f7f7] p-4">
+              <AccordionItem value="item-2" className="bg-[#f9f7f7] py-4 pr-4 data-[state=open]:bg-blue-50">
                 <AccordionTrigger className="text-lg font-semibold">
-                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">Risk Behaviour</span>
+                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-r-full px-3 py-1">Risk Behaviour</span>
                 </AccordionTrigger>
-                <AccordionContent className="pt-4 pb-2">
+                <AccordionContent className="pt-4 pb-2 pl-4">
                   <TooltipProvider>
                     <div className="space-y-8 divide-y">
                       {/* Shared Needle */}
@@ -367,11 +495,11 @@ const FollowUp = () => {
                 </AccordionContent>
               </AccordionItem>
               {/* Vital Sign */}
-              <AccordionItem value="item-3" className="bg-[#f9f7f7] p-4">
+              <AccordionItem value="item-3" className="bg-[#f9f7f7] py-4 pr-4 data-[state=open]:bg-blue-50">
                 <AccordionTrigger className="text-lg font-semibold">
-                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">Vital Sign</span>
+                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-r-full px-3 py-1">Vital Sign</span>
                 </AccordionTrigger>
-                <AccordionContent className="pt-4 pb-2 space-y-4">
+                <AccordionContent className="pt-4 pb-2 pl-4 space-y-4">
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="weight">Body Weight (lb) <span className="text-red-500">*</span></Label>
                     <Input id="weight" type="number" placeholder="Enter weight in lb" className="bg-white" />
@@ -411,101 +539,235 @@ const FollowUp = () => {
                 </AccordionContent>
               </AccordionItem>
               {/* Lab Investigation */}
-              <AccordionItem value="item-4" className="bg-[#f9f7f7] p-4">
+              <AccordionItem value="item-4" className="bg-[#f9f7f7] py-4 pr-4 data-[state=open]:bg-blue-50">
                 <AccordionTrigger className="text-lg font-semibold">
-                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">Lab Investigation</span>
+                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-r-full px-3 py-1">Lab Investigation & Referral</span>
                 </AccordionTrigger>
-                <AccordionContent className="pt-4 pb-2 space-y-6">
-                  {/* HIV Testing */}
-                  <div className="space-y-2">
-                    <Label className="font-bold text-lg">HIV Testing</Label>
+                <AccordionContent className="pt-4 pb-2 pl-4 space-y-6">
+                  <Label className="font-bold text-lg">HIV & Syphilis Testing</Label>
+                  <Accordion type="single" collapsible className="w-full space-y-4">
                     {"Self,Partner 1,Partner 2".split(",").map((role, index) => (
-                      <div key={role} className="grid grid-cols-1 md:grid-cols-9 gap-2 items-end bg-gray-50 rounded-lg p-2 mb-2">
-                        <Input placeholder={index === 0 ? "001/000001" : role} readOnly={index === 0} className="bg-gray-100" />
-                        <RadioGroup className="col-span-2 flex gap-4">
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="M" id={`${role}-male`} />
-                            <Label htmlFor={`${role}-male`}>M</Label>
+                      <AccordionItem key={role} value={`item-${role}`}>
+                        <AccordionTrigger className="bg-gray-50 rounded-lg p-4 font-bold text-base">
+                          <div className="flex items-center gap-4">
+                            <Input
+                              placeholder={index === 0 ? "001/000001" : role}
+                              readOnly={true}
+                              className="bg-gray-100 w-auto"
+                              onClick={(e) => e.stopPropagation()}
+                            />
+                            {index !== 0 && (
+                              <>
+                                <div className="flex items-center space-x-2">
+                                  <Label htmlFor={`${role}-age`}>Age</Label>
+                                  <Input
+                                    id={`${role}-age`}
+                                    type="number"
+                                    placeholder="Age"
+                                    className="w-24"
+                                    onClick={(e) => e.stopPropagation()}
+                                  />
+                                </div>
+                                <RadioGroup className="flex gap-4" onClick={(e) => e.stopPropagation()}>
+                                  <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="M" id={`${role}-male`} />
+                                    <Label htmlFor={`${role}-male`}>M</Label>
+                                  </div>
+                                  <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="F" id={`${role}-female`} />
+                                    <Label htmlFor={`${role}-female`}>F</Label>
+                                  </div>
+                                </RadioGroup>
+                              </>
+                            )}
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="F" id={`${role}-female`} />
-                            <Label htmlFor={`${role}-female`}>F</Label>
+                        </AccordionTrigger>
+                        <AccordionContent className="p-4 bg-gray-50 rounded-b-lg">
+                          <div className="grid md:grid-cols-2 gap-6">
+                            {/* HIV Testing Card */}
+                            <div className="space-y-2 bg-white rounded-lg p-4 shadow-md">
+                              <Label className="font-bold text-lg">HIV Testing</Label>
+                              <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                  <Label htmlFor={`hiv-date-${role}`} className="w-1/3">HIV Test Date</Label>
+                                  <IconlessDatePicker
+                                    date={hivTestDates[role]}
+                                    setDate={(date) => handleHivDateChange(role, date)}
+                                    className="flex-1"
+                                  />
+                                </div>
+                                {[1, 2, 3].map((i) => (
+                                  <div key={i} className="flex items-center gap-2">
+                                    <Label htmlFor={`hiv-test-${role}-${i}`} className="w-1/3">Test {i} Result</Label>
+                                    <Select
+                                      onValueChange={(value) => handleHivTestChange(role, i, value)}
+                                      value={
+                                        (hivResults[role] as Record<HivTestKey, HivTestResult>)?.[`test${i}` as HivTestKey] ?? ""
+                                      }
+                                      disabled={i > 1 && hivResults[role]?.test1 === "Non-Reactive"}
+                                    >
+                                      <SelectTrigger id={`hiv-test-${role}-${i}`} className="flex-1">
+                                        <SelectValue placeholder={`Test ${i} Result`} />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        {testOptions.map((opt) => (
+                                          <SelectItem key={opt + i} value={opt}>
+                                            {opt}
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+                                ))}
+                                <div className="flex items-center gap-2">
+                                  <Label htmlFor={`hiv-final-result-${role}`} className="w-1/3">Final Result</Label>
+                                  <Select value={hivResults[role]?.final ?? ""} disabled>
+                                    <SelectTrigger id={`hiv-final-result-${role}`} className="flex-1">
+                                      <SelectValue placeholder="Final Result">
+                                        {hivResults[role]?.final || "Final Result"}
+                                      </SelectValue>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {finalOptions.map((opt) => (
+                                        <SelectItem key={opt + "final"} value={opt}>
+                                          {opt}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <Checkbox id={`post-test-counselling-${role}`} />
+                                  <Label htmlFor={`post-test-counselling-${role}`}>Post-test counseling</Label>
+                                </div>
+                                {hivResults[role]?.final === "Positive" && (
+                                  <div className="flex items-center space-x-2">
+                                    <Checkbox id={`refer-for-art-${role}`} />
+                                    <Label htmlFor={`refer-for-art-${role}`}>Refer for ART</Label>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            {/* Syphilis Testing Card */}
+                            <div className="space-y-2 bg-white rounded-lg p-4 shadow-md">
+                              <Label className="font-bold text-lg">Syphilis Testing</Label>
+                              <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                  <Label htmlFor={`syphilis-date-${role}`} className="w-1/3">Syphilis Test Date</Label>
+                                  <IconlessDatePicker
+                                    date={syphilisTestDates[role]}
+                                    setDate={(date) => handleSyphilisDateChange(role, date)}
+                                    className="flex-1"
+                                  />
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <Label htmlFor={`syphilis-result-${role}`} className="w-1/3">Test Result</Label>
+                                  <Select>
+                                    <SelectTrigger id={`syphilis-result-${role}`} className="flex-1">
+                                      <SelectValue placeholder="Test Result" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {testOptions.map((opt) => (
+                                        <SelectItem key={opt + "syphilis"} value={opt}>{opt}</SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <Checkbox id={`refer-for-sti-${role}`} />
+                                  <Label htmlFor={`refer-for-sti-${role}`}>Refer for STI treatment</Label>
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                        </RadioGroup>
-                        <Input placeholder="Age" type="number" className="bg-white" />
-                        <IconlessDatePicker
-                          date={hivTestDate}
-                          setDate={setHivTestDate}
-                          placeholder="Test Date"
-                        />
-                        {[1, 2, 3].map((i) => (
-                          <Select key={i}>
-                            <SelectTrigger><SelectValue placeholder={`Test ${i}`} /></SelectTrigger>
-                            <SelectContent>
-                              {testOptions.map((opt) => (
-                                <SelectItem key={opt + i} value={opt}>{opt}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        ))}
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                  {/* Hep B/C Testing */}
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="flex flex-col gap-2 bg-gray-50 rounded-lg p-4">
+                      <Label className="font-semibold">Hep B Testing</Label>
+                      <div className="flex items-center gap-2">
+                        <Label htmlFor="hepb-result" className="w-1/3">Test Result</Label>
                         <Select>
-                          <SelectTrigger><SelectValue placeholder="Final Result" /></SelectTrigger>
+                          <SelectTrigger id="hepb-result" className="flex-1">
+                            <SelectValue placeholder="-- Select --" />
+                          </SelectTrigger>
                           <SelectContent>
                             {testOptions.map((opt) => (
-                              <SelectItem key={opt + "final"} value={opt}>{opt}</SelectItem>
+                              <SelectItem key={opt + "hepb"} value={opt}>{opt}</SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
-                        <RadioGroup className="flex gap-2">
-                          <RadioGroupItem value="yes" id={`counselling-yes-${role}`} />
-                          <Label htmlFor={`counselling-yes-${role}`}>Yes</Label>
-                          <RadioGroupItem value="no" id={`counselling-no-${role}`} />
-                          <Label htmlFor={`counselling-no-${role}`}>No</Label>
-                        </RadioGroup>
-                        <RadioGroup className="flex gap-2">
-                          <RadioGroupItem value="yes" id={`artreferral-yes-${role}`} />
-                          <Label htmlFor={`artreferral-yes-${role}`}>Yes</Label>
-                          <RadioGroupItem value="no" id={`artreferral-no-${role}`} />
-                          <Label htmlFor={`artreferral-no-${role}`}>No</Label>
-                        </RadioGroup>
                       </div>
-                    ))}
-                  </div>
-                  {/* Hep B/C Testing */}
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {/* Hep B */}
-                    <div className="flex flex-col gap-2 bg-gray-50 rounded-lg p-4">
-                      <Label className="font-semibold">Hep B Testing</Label>
-                      <Select>
-                        <SelectTrigger><SelectValue placeholder="-- Select --" /></SelectTrigger>
-                        <SelectContent>
-                          {testOptions.map((opt) => (
-                            <SelectItem key={opt + "hepb"} value={opt}>{opt}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <DatePicker
-                        date={testDateHepB}
-                        setDate={setTestDateHepB}
-                        placeholder="Test Date"
-                      />
+                      <div className="flex items-center gap-2">
+                        <Label htmlFor="hepb-date" className="w-1/3">Test Date</Label>
+                        <IconlessDatePicker
+                          date={testDateHepB}
+                          setDate={setTestDateHepB}
+                          className="flex-1"
+                        />
+                      </div>
+
+                      {/* Hep B Vaccination Section */}
+                      <div className="space-y-2 mt-4 pt-4 border-t border-gray-300">
+                        <Label className="font-semibold">Hep B Vaccination</Label>
+                        <div className="flex flex-col gap-2">
+                          <div className="flex items-center gap-2">
+                            <Label htmlFor="hepb-vaccine-1" className="w-1/3">1st Dose Date</Label>
+                            <IconlessDatePicker
+                              date={hepbVaccineDates[1]}
+                              setDate={(date) => handleHepBVaccineChange(1, date)}
+                              className="flex-1"
+                            />
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Label htmlFor="hepb-vaccine-2" className="w-1/3">2nd Dose Date</Label>
+                            <IconlessDatePicker
+                              date={hepbVaccineDates[2]}
+                              setDate={(date) => handleHepBVaccineChange(2, date)}
+                              className="flex-1"
+                            />
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Label htmlFor="hepb-vaccine-3" className="w-1/3">3rd Dose Date</Label>
+                            <IconlessDatePicker
+                              date={hepbVaccineDates[3]}
+                              setDate={(date) => handleHepBVaccineChange(3, date)}
+                              className="flex-1"
+                            />
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    {/* Hep C */}
                     <div className="flex flex-col gap-2 bg-gray-50 rounded-lg p-4">
                       <Label className="font-semibold">Hep C Testing</Label>
-                      <Select>
-                        <SelectTrigger><SelectValue placeholder="-- Select --" /></SelectTrigger>
-                        <SelectContent>
-                          {testOptions.map((opt) => (
-                            <SelectItem key={opt + "hepc"} value={opt}>{opt}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <DatePicker
-                        date={testDateHepC}
-                        setDate={setTestDateHepC}
-                        placeholder="Test Date"
-                      />
+                      <div className="flex items-center gap-2">
+                        <Label htmlFor="hepc-result" className="w-1/3">Test Result</Label>
+                        <Select>
+                          <SelectTrigger id="hepc-result" className="flex-1">
+                            <SelectValue placeholder="-- Select --" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {testOptions.map((opt) => (
+                              <SelectItem key={opt + "hepc"} value={opt}>{opt}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Label htmlFor="hepc-date" className="w-1/3">Test Date</Label>
+                        <IconlessDatePicker
+                          date={testDateHepC}
+                          setDate={setTestDateHepC}
+                          className="flex-1"
+                        />
+                      </div>
+                      <div className="flex items-center space-x-2 mt-2">
+                        <Checkbox id="refer-for-hepc-treatment" />
+                        <Label htmlFor="refer-for-hepc-treatment">Refer for Hep C treatment</Label>
+                      </div>
                     </div>
                   </div>
                   {/* Urine Testing */}
@@ -515,14 +777,24 @@ const FollowUp = () => {
                       <div className="grid grid-cols-1 gap-2">
                         {urineTests.map((drug) => (
                           <div key={drug} className="grid grid-cols-5 gap-2 items-center bg-gray-50 rounded-lg p-2 mb-1">
-                            <Checkbox id={`checkbox-${drug}`} className="border-black" />
-                            <Label htmlFor={`checkbox-${drug}`} className="col-span-1">{drug}</Label>
-                            <DatePicker
-                              date={urineTestDates[drug]}
-                              setDate={(date) => handleUrineTestDateChange(drug, date)}
-                              placeholder="Test Date"
-                            />
-                            <div className="flex items-center space-x-4 col-span-2">
+                            {/* Drug Checkbox & Label */}
+                            <div className="flex items-center space-x-2">
+                              <Checkbox id={`checkbox-${drug}`} className="border-black" />
+                              <Label htmlFor={`checkbox-${drug}`}>{drug}</Label>
+                            </div>
+
+                            {/* Date Input with new Label and reduced width */}
+                            <div className="col-span-2 flex items-center gap-3">
+                              <Label className="text-sm font-medium mb-1">Test Date</Label>
+                              <DatePicker
+                                date={urineTestDates[drug]}
+                                setDate={(date) => handleUrineTestDateChange(drug, date)}
+                                className="w-3/4" // Width is reduced here
+                              />
+                            </div>
+
+                            {/* Radio Group */}
+                            <div className="flex items-center space-x-2 col-span-2">
                               <div className="flex items-center space-x-2">
                                 <RadioGroupItem value="positive" id={`${drug}-pos`} />
                                 <Label htmlFor={`${drug}-pos`}>Positive</Label>
@@ -540,19 +812,16 @@ const FollowUp = () => {
                 </AccordionContent>
               </AccordionItem>
               {/* Treatment */}
-              <AccordionItem value="item-5" className="bg-[#f9f7f7] p-4">
+              <AccordionItem value="item-5" className="bg-[#f9f7f7] py-4 pr-4 data-[state=open]:bg-blue-50">
                 <AccordionTrigger className="text-lg font-semibold">
-                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">Treatment</span>
+                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-r-full px-3 py-1">Treatment</span>
                 </AccordionTrigger>
-                <AccordionContent className="pt-4 pb-2 space-y-6">
+                <AccordionContent className="pt-4 pb-2 pl-4 space-y-6">
                   <div className="space-y-2">
                     <Label className="font-semibold">Refer For:</Label>
                     <div className="grid md:grid-cols-3 gap-4">
                       {[
-                        "ART Treatment",
-                        "STI Treatment",
-                        "Rehabilitation",
-                        "Hep C Treatment"
+                        "Rehabilitation"
                       ].map(item => (
                         <div key={item} className="flex items-center space-x-2">
                           <Checkbox id={`refer-${item}`} />
@@ -585,9 +854,11 @@ const FollowUp = () => {
                     <div className="flex flex-col gap-2">
                       <Label>Treatment Type <span className="text-red-500">*</span></Label>
                       <Select>
-                        <SelectTrigger><SelectValue placeholder="Select Treatment Type" /></SelectTrigger>
+                        <SelectTrigger className="w-[70%]">
+                          <SelectValue placeholder="Select Treatment Type" />
+                        </SelectTrigger>
                         <SelectContent>
-                          {["OST", "Psychosocial", "Detox", "Other"].map(type => (
+                          {["OST", "Symptomatic", "Detox"].map(type => (
                             <SelectItem key={type} value={type}>{type}</SelectItem>
                           ))}
                         </SelectContent>
@@ -595,10 +866,11 @@ const FollowUp = () => {
                     </div>
                     <div className="flex flex-col gap-2">
                       <Label>Treatment Start Date <span className="text-red-500">*</span></Label>
-                      <DatePicker
+                      <IconlessDatePicker
                         date={treatmentStartDate}
                         setDate={setTreatmentStartDate}
                         placeholder="Select Start Date"
+                        className="w-[70%]"
                       />
                     </div>
                   </div>
@@ -608,8 +880,8 @@ const FollowUp = () => {
                     <RadioGroup defaultValue="Methadone" className="space-y-3">
                       {[
                         { label: "Methadone", doses: true },
-                        { label: "Buprenorphine", unit: "2mg" },
-                        { label: "Tincture Opium", doses: true },
+                        { label: "Buprenorphine", doses: false, radioDoses: true },
+                        // { label: "Tincture Opium", doses: true }, 
                         { label: "Other", input: true }
                       ].map(option => (
                         <div key={option.label} className="flex flex-wrap items-center gap-2">
@@ -623,27 +895,46 @@ const FollowUp = () => {
                               <span>mg</span>
                             </>
                           )}
-                          {option.unit && (
+                          {option.radioDoses && (
                             <>
                               <Input placeholder="Dose" className="w-24 bg-white" />
-                              <span>{option.unit}</span>
+                              <RadioGroup className="flex flex-row flex-wrap gap-4">
+                                <div className="flex items-center space-x-2">
+                                  <RadioGroupItem value="2mg" id="buprenorphine-2mg" />
+                                  <Label htmlFor="buprenorphine-2mg">2mg</Label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <RadioGroupItem value="8mg" id="buprenorphine-8mg" />
+                                  <Label htmlFor="buprenorphine-8mg">8mg</Label>
+                                </div>
+                              </RadioGroup>
                             </>
                           )}
                           {option.input && (
                             <Input placeholder="Specify other" className="flex-1 bg-white" />
                           )}
                         </div>
+
                       ))}
+                      <div className="flex flex-col gap-2 w-[300px]">
+                        <Label>Next Appointment Date</Label>
+                        <IconlessDatePicker
+                          date={nextAppointmentDate}
+                          setDate={setNextAppointmentDate}
+                          placeholder="Select Date"
+                          className="w-[70%]"
+                        />
+                      </div>
                     </RadioGroup>
                   </div>
                 </AccordionContent>
               </AccordionItem>
               {/* Outcome */}
-              <AccordionItem value="item-6" className="bg-[#f9f7f7] p-4">
+              <AccordionItem value="item-6" className="bg-[#f9f7f7] py-4 pr-4 data-[state=open]:bg-blue-50">
                 <AccordionTrigger className="text-lg font-semibold">
-                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">Outcome</span>
+                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-r-full px-3 py-1">Outcome</span>
                 </AccordionTrigger>
-                <AccordionContent className="pt-4 pb-2 space-y-6">
+                <AccordionContent className="pt-4 pb-2 pl-4 space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="flex flex-col gap-2">
                       <Label>Outcome Date <span className="text-red-500">*</span></Label>
@@ -722,11 +1013,11 @@ const FollowUp = () => {
                 </AccordionContent>
               </AccordionItem>
               {/* BPN Side Effect */}
-              <AccordionItem value="item-7" className="bg-[#f9f7f7] p-4">
+              <AccordionItem value="item-7" className="bg-[#f9f7f7] py-4 pr-4 data-[state=open]:bg-blue-50">
                 <AccordionTrigger className="text-lg font-semibold">
-                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">BPN Side Effect</span>
+                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-r-full px-3 py-1">BPN Side Effect</span>
                 </AccordionTrigger>
-                <AccordionContent className="pt-4 pb-2 space-y-4">
+                <AccordionContent className="pt-4 pb-2 pl-4 space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {sideEffects.map(effect => (
                       <div key={effect} className="flex items-center space-x-2">
@@ -738,9 +1029,9 @@ const FollowUp = () => {
                 </AccordionContent>
               </AccordionItem>
               {/* Tb & Mental Health */}
-              <AccordionItem value="item-tb-mental" className="bg-[#f9f7f7] p-4">
+              <AccordionItem value="item-tb-mental" className="bg-[#f9f7f7] py-4 pr-4 data-[state=open]:bg-blue-50">
                 <AccordionTrigger className="text-lg font-semibold">
-                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-full px-3 py-1">TB & Mental Health</span>
+                  <span className="text-sm font-semibold text-white bg-[#051463] rounded-r-full px-3 py-1">TB & Mental Health</span>
                 </AccordionTrigger>
                 <AccordionContent className="pt-4 pb-2 space-y-4">
                   <div className="flex flex-col gap-8 p-6">
@@ -793,7 +1084,7 @@ const FollowUp = () => {
                         )
                       }
                     </div>
-                    <div className="flex items-center gap-[298px]">
+                    <div className="flex items-center gap-[363px]">
                       <div className="flex gap-2">
                         <Label>Mental Health Screening</Label>
                         <div className="flex items-center space-x-2">

@@ -7,19 +7,28 @@ import { Outlet } from 'react-router-dom';
 import { Toaster } from 'sonner';
 
 const HomeLayout: React.FC = () => {
-  const { isCollapsed } = useSidebarState();
+    const { isCollapsed } = useSidebarState();
     return (
-        <SidebarProvider>
+        <SidebarProvider className=''>
             <Toaster />
             <AppSidebar />
-            <div  className={`fixed top-0 ${isCollapsed ? "left-0" : "left-64"} right-0 z-40 h-16 bg-white border-b shadow-sm flex items-center`}>
+            <div className={`fixed top-0 ${isCollapsed ? "left-0" : "left-64"} right-0 z-40 h-16 bg-white border-b shadow-sm flex items-center`}>
                 <Navbar />
             </div>
-            <main
-                className={`transition-all duration-300 px-6 pt-22 w-full hide-scrollbar overflow-auto`}
-            >
-                <Outlet />
-            </main>
+
+            <div className={`transition-all duration-300  pt-16 flex flex-col min-h-screen w-full`}>
+                <main className="flex-grow">
+                    {/* Page Content */}
+                    <div className="p-4">
+                        <Outlet />
+                    </div>
+                </main>
+
+                {/* Footer placed at the bottom */}
+                <footer className="w-full bg-gray-100 py-4 text-center text-sm text-gray-600">
+                    YangonMental Health Hospital (DDTRU)
+                </footer>
+            </div>
         </SidebarProvider>
     )
 };

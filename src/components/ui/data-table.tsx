@@ -65,7 +65,7 @@ export default function DataTable<T>({ data, columns, onRowClick }: DataTablePro
       setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
     } else {
       setSortBy(accessor);
-      setSortOrder("asc");
+      setSortOrder("asc"); 
     }
   };
 

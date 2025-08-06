@@ -82,6 +82,7 @@ const InputGroup = ({ label, id, type = "text", value, onChange, readOnly, min, 
 export default function CreatePatient() {
   const navigate = useNavigate();
 
+  const [clientId, setClientId] = useState("");
   // --- Client Information States ---
   const [entryType, setEntryType] = useState<"new" | "transfer">("new");
   // const [clientId, setClientId] = useState("001/000001"); 
@@ -246,17 +247,17 @@ export default function CreatePatient() {
           </RadioGroup>
         </div>
 
-        <Card className="shadow-xl rounded-2xl border-0 bg-white/90">
+        <Card className="shadow-xl rounded-2xl border-0 bg-blue-50">
           <CardContent className="pt-0">
             {/* Card Header with blue gradient and icon */}
             <div className="rounded-t-2xl bg-[#051463] px-8 py-6 flex items-center gap-3 mb-6 shadow-md">
               <UserPlus className="w-8 h-8 text-white drop-shadow" />
               <h2 className="text-3xl font-extrabold text-white tracking-tight">Client Information</h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-8 ">
               {/* General Info */}
               {/* Added readOnly: true and empty placeholder for static inputs */}
-              <InputGroup label={<span className="flex items-center gap-2"><IdCard className="w-4 h-4 text-[#051463]" />Client Id</span>} id="client-id" value={`001/000001`} readOnly={true} placeholder="" />
+              <InputGroup label={<span className="flex items-center gap-2"><IdCard className="w-4 h-4 text-[#051463]" />Client ID</span>} id="client-id" value={clientId}  placeholder="" onChange={(e) => setClientId(e.target.value)} />
               <InputGroup label={<span className="flex items-center gap-2"><IdCard className="w-4 h-4 text-[#051463]" />Old Client Id</span>} id="old-client-id" value={oldClientId} onChange={(e) => setOldClientId(e.target.value)} placeholder="Enter old client ID" />
               <InputGroup label={<span className="flex items-center gap-2"><User className="w-4 h-4 text-[#051463]" />Client Name</span>} id="client-name" value={clientName} onChange={(e) => setClientName(e.target.value)} placeholder="Enter client name" />
 

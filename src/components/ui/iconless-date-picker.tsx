@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { useState } from "react"; // Import useState
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -9,18 +10,31 @@ interface DatePickerProps {
   date: Date | undefined;
   setDate: (date: Date | undefined) => void;
   placeholder?: string;
+  className?: string;
 }
 
-export function IconlessDatePicker({ date, setDate, placeholder = "Pick a date" }: DatePickerProps) {
+export function IconlessDatePicker({ date, setDate, placeholder = "Pick a date", className, ...props }: DatePickerProps) {
+  // Add a state variable to control the open/closed state of the popover
+  const [open, setOpen] = useState(false);
+
+  // A new handler function to update the date and then close the popover
+  const handleDateSelect = (selectedDate: Date | undefined) => {
+    setDate(selectedDate);
+    setOpen(false); // Manually close the popover
+  };
+
   return (
-    <Popover>
+    // Pass the `open` state to the Popover
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant={"outline"}
           className={cn(
-            "w-full justify-start text-left font-normal bg-white",
-            !date && "text-muted-foreground"
+            "justify-start text-left font-normal bg-white",
+            !date && "text-muted-foreground",
+            className
           )}
+          {...props}
         >
           {date ? format(date, "dd/MM/yyyy") : <span>{placeholder}</span>}
         </Button>
@@ -29,9 +43,8 @@ export function IconlessDatePicker({ date, setDate, placeholder = "Pick a date" 
         <Calendar
           mode="single"
           selected={date}
-          onSelect={setDate}
+          onSelect={handleDateSelect} // Use the new handler here
           initialFocus
-          // Add this prop to enable the year and month dropdowns
           captionLayout="dropdown"
         />
       </PopoverContent>

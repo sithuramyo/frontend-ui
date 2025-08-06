@@ -17,6 +17,12 @@ const Navbar = () => {
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-full pointer-events-none">
           <span className="font-semibold text-lg"></span>
         </div>
+        <div className="flex justify-between items-center w-full mr-12">
+          <div className="font-semibold text-lg ml-6 text-[#051463]">DTIS: Drug Treatment Information System</div>
+          <div>
+            <img src="/logo.png" alt="" className="w-12" />
+          </div>
+        </div>
       </div>
     </header>
   );
