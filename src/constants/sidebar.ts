@@ -173,8 +173,6 @@ export const iconSidebarItems: SidebarMenuItem[] = [
   },
 ];
 
-
-
 export const FacilitySidebarItems: SidebarMenuItem[] = [
   {
     id: 1,
@@ -212,4 +210,53 @@ export const FacilitySidebarItems: SidebarMenuItem[] = [
     path: "/facility/expired-and-cause-of-death",
     icon: Skull,
   },
+];
+
+export const operaLongSidebarItems: SidebarMenuItem[] = [
+  {
+    id: 1,
+    label: "Take Home List",
+    path: "",
+    icon: Home,
+  },
+  {
+    id: 2,
+    label: "Treated List",
+    path: "",
+    icon: UsersRound,
+  },
+  {
+    id: 3,
+    label: "Urine Test List",
+    path: "",
+    icon: SoapDispenserDroplet,
+  },
+
+  {
+    id: 3,
+    label: "Transfer In List",
+    path: "",
+    icon: Boxes,
+  },
+  {
+    id: 4,
+    label: "Transfer Out List",
+    path: "",
+    icon: LayoutDashboard,
+  },
+];
+
+export const operaShortSidebarItems: SidebarMenuItem[] = [
+  {
+    id: 1,
+    label: "Dispenser control",
+    path: "",
+    icon: Home,
+  },
+  {
+    id: 2,
+    label: "Data backup",
+    path: "",
+    icon: UsersRound,
+  }
 ];

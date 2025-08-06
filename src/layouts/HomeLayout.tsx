@@ -25,7 +25,7 @@ const HomeLayout: React.FC = () => {
                 </main>
 
                 {/* Footer placed at the bottom */}
-                <footer className="w-full bg-gray-100 py-4 text-center text-sm text-gray-600">
+                <footer className="w-full bg-gray-100 py-4 text-right pr-12 text-sm text-gray-600 fixed bottom-0 left-0 right-0">
                     YangonMental Health Hospital (DDTRU)
                 </footer>
             </div>
