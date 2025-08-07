@@ -101,6 +101,12 @@ export const sidebarItems: SidebarMenuItem[] = [
     path: "/iconOnlyHome/dashboard",
     icon: LayoutDashboardIcon,
   },
+  {
+    id: 10,
+    label: "New Dashboard Two",
+    path: "/operalikeHome",
+    icon: LayoutDashboardIcon,
+  },
 ];
 
 export const iconSidebarItems: SidebarMenuItem[] = [
@@ -254,6 +260,12 @@ export const operaLongSidebarItems: SidebarMenuItem[] = [
 ];
 
 export const operaShortSidebarItems: SidebarMenuItem[] = [
+  {
+    id: 1,
+    label: "Back To Original Dashboard",
+    path: "/home/dashboard",
+    icon: LayoutDashboard, // A standard icon for system controls and settings.
+  },
   {
     id: 1,
     label: "Dispenser control",
